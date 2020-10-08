@@ -1,5 +1,5 @@
 public enum Specialisation {
-    CHEMSITRY,
+    CHEMISTRY,
     EARTH_SCIENCE,
     PHYSICS,
     ASTRONOMY,

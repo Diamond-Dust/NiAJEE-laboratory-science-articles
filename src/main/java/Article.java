@@ -1,6 +1,14 @@
-import java.util.HashSet;
-import java.util.Set;
+import lombok.*;
 
+import java.util.HashSet;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 public class Article {
     private Publisher         _publisher;
     private Scientist         _author;
@@ -16,26 +24,14 @@ public class Article {
         _title     = article._title;
     }
 
-    public Article(Publisher publisher, Scientist author, HashSet<Citation> sources, String title) {
-        _publisher = publisher;
-        _author    = author;
-        _sources   = sources;
-        _title     = title;
-    }
-
-    public Article() {
-        this(null, null, null, null);
-        _sources = new HashSet<Citation>();
-    }
-
     public Article(String title) {
         this(null, null, null, title);
-        _sources = new HashSet<Citation>();
+        _sources = new HashSet<>();
     }
 
     public Article(Publisher publisher, Scientist author, String title) {
         this(publisher, author, null, title);
-        _sources = new HashSet<Citation>();
+        _sources = new HashSet<>();
     }
 
     //-----------------------------------------------
@@ -49,49 +45,5 @@ public class Article {
     }
 
     //-----------------------------------------------
-
-    public Publisher getPublisher() {
-        return _publisher;
-    }
-
-    public Scientist getAuthor() {
-        return _author;
-    }
-
-    public Set<Citation> getSources() {
-        return _sources;
-    }
-
-    public String getTitle() {
-        return _title;
-    }
-
-    public void setPublisher(Publisher publisher) {
-        _publisher = publisher;
-    }
-
-    public void setAuthor(Scientist author) {
-        _author = author;
-    }
-
-    public void setSources(HashSet<Citation> sources) {
-        _sources = sources;
-    }
-
-    public void setTitle(String title) {
-        _title = title;
-    }
-
-    //-----------------------------------------------
-
-    @Override
-    public String toString() {
-        return
-                "Title: "     + _title                + "\n" +
-                "Author: "    + _author.toString()    + "\n" +
-                "Publisher: " + _publisher.toString() + "\n" +
-                "Sources: "   + _sources.toString()
-        ;
-    }
 
 }
