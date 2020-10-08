@@ -1,18 +1,18 @@
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode
 public class Article {
     private Publisher         _publisher;
     private Scientist         _author;
-    private HashSet<Citation> _sources;
+    private Set<Citation>     _sources = new HashSet<>();
     private String            _title;
 
     //-----------------------------------------------

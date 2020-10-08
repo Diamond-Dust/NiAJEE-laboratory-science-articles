@@ -6,7 +6,6 @@ import java.net.URL;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode
 public class Scientist {
