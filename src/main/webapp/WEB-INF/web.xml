@@ -29,19 +29,18 @@
         <url-pattern>/api/scientists/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>authenticationServlet</servlet-name>
+        <servlet-class>pl.edu.pg.eti.kask.labsart.scientist.authorisation.servlet.AuthenticationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>authenticationServlet</servlet-name>
+        <url-pattern>/api/scientist/login</url-pattern>
+        <url-pattern>/api/scientist/logout</url-pattern>
+    </servlet-mapping>
+
     <!-- LISTENERS -->
-
-    <listener>
-        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.CreateDataSource</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.CreateServices</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.InitialiseDataSource</listener-class>
-    </listener>
 
 
 </web-app>

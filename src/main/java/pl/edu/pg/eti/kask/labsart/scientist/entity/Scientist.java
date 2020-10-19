@@ -11,7 +11,7 @@ import java.net.URL;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
 public class Scientist implements Serializable {

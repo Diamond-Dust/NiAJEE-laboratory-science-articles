@@ -5,18 +5,28 @@ import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.scientist.service.ScientistService;
 import pl.edu.pg.eti.kask.labsart.util.Util;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-public class InitialiseDataSource implements ServletContextListener {
+@ApplicationScoped
+public class InitializedData {
 
-    @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        ScientistService scientistService = (ScientistService) sce.getServletContext().getAttribute("scientistService");
-        init(scientistService);
+    private final ScientistService scientistService;
+
+    @Inject
+    public InitializedData (ScientistService scientistService) {
+        this.scientistService = scientistService;
     }
 
-    private synchronized void init(ScientistService scientistService) {
+    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        init();
+    }
+
+    private synchronized void init() {
         Scientist einstein = Scientist.builder()
                 .login("einstein33")
                 .password(Util.hash("secretbomb"))

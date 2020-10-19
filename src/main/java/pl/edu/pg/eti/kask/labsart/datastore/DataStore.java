@@ -9,12 +9,14 @@ import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.serialisation.CloningUtility;
 import pl.edu.pg.eti.kask.labsart.util.Util;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log
+@ApplicationScoped
 public class DataStore {
     private Set<Scientist> scientists = new HashSet<>();
     private Set<Article>   articles   = new HashSet<>();
@@ -203,6 +205,14 @@ public class DataStore {
         return publishers.stream();
     }
 
+    //------------------------------------------------------------------------------------------------------------------
 
+    public synchronized Optional<Scientist> findScientist(String login, String password) throws IllegalArgumentException {
+        return scientists.stream()
+                .filter(user -> user.getLogin().equals(login))
+                .filter(users -> users.getPassword().equals(password))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
 
 }
