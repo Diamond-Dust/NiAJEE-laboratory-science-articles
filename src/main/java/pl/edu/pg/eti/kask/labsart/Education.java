@@ -1,3 +1,5 @@
+package pl.edu.pg.eti.kask.labsart;
+
 public enum Education {
     NONE,
     PRIMARY,

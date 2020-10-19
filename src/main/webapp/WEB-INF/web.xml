@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <!-- SERVLETS -->
+
+    <servlet>
+        <servlet-name>helloServlet</servlet-name>
+        <servlet-class>pl.edu.pg.eti.kask.labsart.servlet.HelloServlet</servlet-class>
+        <init-param>
+            <param-name>text</param-name>
+            <param-value>TEXT: %s</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>helloServlet</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>scientistServlet</servlet-name>
+        <servlet-class>pl.edu.pg.eti.kask.labsart.scientist.servlet.ScientistServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>scientistServlet</servlet-name>
+        <url-pattern>/api/scientists/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- LISTENERS -->
+
+    <listener>
+        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.CreateDataSource</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.CreateServices</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>pl.edu.pg.eti.kask.labsart.configuration.InitialiseDataSource</listener-class>
+    </listener>
+
+
+</web-app>
