@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
     public static URL createUrl(String url) {
@@ -46,5 +48,15 @@ public class Util {
         return hexString.toString();
     }
 
+    public static String getFirstGroupFromPath(String path, Pattern pattern) {
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            path = matcher.group().replaceAll("/", "");
+        } else {
+            path = "";
+        }
+
+        return path;
+    }
 
 }

@@ -21,7 +21,7 @@ import java.util.function.Function;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class ScientistsGetResponse {
@@ -29,7 +29,7 @@ public class ScientistsGetResponse {
     @Setter
     @Builder
     @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     @ToString
     @EqualsAndHashCode
     public static class ListScientist {

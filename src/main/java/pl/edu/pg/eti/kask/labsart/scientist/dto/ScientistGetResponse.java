@@ -29,7 +29,7 @@ public class ScientistGetResponse {
                 .login((scientist.getLogin() == null) ? "null" : scientist.getLogin())
                 .hirschIndex(scientist.getHirschIndex())
                 .website((scientist.getWebsite() == null) ? "null" : scientist.getWebsite().toString())
-                .education((scientist.getEducation() == null) ? "null" : scientist.getEducation().toString())
+                .education((scientist.getEducation() == null) ? "null" : scientist.getEducation().name())
                 .build();
     }
 

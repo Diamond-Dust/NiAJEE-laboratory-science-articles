@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>labsart</title>
+    <!--<link rel="stylesheet" href="../styles.css"/>
+    <link rel="stylesheet" href="charater_edit.css"/>
+    <script src="../script.js" defer="defer"></script>
+    <script src="character_edit.js" defer="defer"></script>-->
+    <!--<script src="script.js" defer="defer"></script>-->
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Labsart</h1>
+        <!--<form id="loginForm">
+            <label for="login">Login: </label>
+            <input id="login" class="ui-control ui-input" name="login"/>
+            <label for="password">Password:</label>
+            <input id="password" class="ui-control ui-input" name="password" type="password"/>
+            <input class="ui-control ui-button" type="submit" value="Login"/>
+        </form>
+        <form id="logoutForm">
+            Logged as: <span id="username">username</span>
+            <input class="ui-control ui-button" type="submit" value="Logout"/>
+        </form>-->
+    </header>
+
+    <nav class="navigation-bar">
+        <ul>
+            <li><a href="../../index.html">main</a></li>
+        </ul>
+    </nav>
+
+    <article class="text--justified">
+        <header><h2>Edit character portrait</h2></header>
+        <form class="avatar__form" id="avatarForm" method="post" enctype="multipart/form-data">
+            <label for="avatar">Avatar:</label>
+            <input class="ui-control ui-button" id="avatar" name="avatar" type="file"/>
+            <input class="ui-control ui-button" type="submit" value="Upload"/>
+        </form>
+    </article>
+
+    <footer class="footer">
+        <p>f</p>
+    </footer>
+</div>
+
+
+<script>
+        window.addEventListener('load', () => {
+            const avatarForm = document.getElementById('avatarForm');
+
+            avatarForm.addEventListener('submit', event => uploadAvatarAction(event));
+
+            loadAvatar(getUserLogin());
+        });
+
+        function getContextRoot() {
+            return '/' + location.pathname.split('/')[1];
+        }
+
+
+        function getUserLogin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            var str = window.location.href;
+            if(str[str.length-1] == '/')
+                str = str.slice(0, -1);
+            var res = str.substring(
+                str.lastIndexOf('/') + 1,
+                (str.indexOf('?') == -1) ? str.length : str.indexOf('?')
+            );
+            console.log(res);
+            return res;
+        }
+
+
+        function loadAvatar(login) {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    let response = JSON.parse(this.responseText);
+                    for (const [key, value] of Object.entries(response)) {
+                        let input = document.getElementById(key);
+                        if (input) {
+                            input.value = value;
+                        }
+                    }
+                }
+            };
+            xhttp.open("GET", getContextRoot() + '/api/avatars/' + login, true);
+            xhttp.send();
+        }
+
+        function uploadAvatarAction(event) {
+            event.preventDefault();
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.open('PUT', getContextRoot() + '/api/avatars/' + getUserLogin(), true);
+
+            let request = new FormData();
+            request.append("avatar", document.getElementById('avatar').files[0]);
+
+            xhttp.send(request);
+
+        }
+    </script>
+</body>
+</html>

@@ -44,13 +44,10 @@ public class ScientistServlet extends HttpServlet {
 
     private void getScientist(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //String login = scientistContext.getLogged();
-        String login = Util.parseRequestPath(request);
-        Matcher matcher = pattern.matcher(login);
-        if (matcher.find()) {
-            login = matcher.group().substring(1);
-        } else {
-            login = "";
-        }
+        String login = Util.getFirstGroupFromPath(
+                Util.parseRequestPath(request),
+                pattern
+        );
 
         Optional<Scientist> scientist = scientistService.find(login);
 

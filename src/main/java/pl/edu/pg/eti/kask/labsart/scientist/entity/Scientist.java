@@ -20,6 +20,7 @@ public class Scientist implements Serializable {
     private double    hirschIndex;
     private URL       website;
     private Education education;
+    private byte[]    avatar;
 
     //-----------------------------------------------
 
