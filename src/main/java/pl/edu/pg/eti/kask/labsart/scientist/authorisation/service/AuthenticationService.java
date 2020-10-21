@@ -33,5 +33,9 @@ public class AuthenticationService {
         }
     }
 
+    public String getLogged() {
+        return context.getLogged();
+    }
+
 }
 

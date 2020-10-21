@@ -17,8 +17,8 @@ import java.util.function.Function;
 public class ScientistGetResponse {
     private String    login;
     private double    hirschIndex;
-    private URL       website;
-    private Education education;
+    private String    website;
+    private String    education;
 
     //-----------------------------------------------
 
@@ -26,10 +26,10 @@ public class ScientistGetResponse {
 
     public static Function<Scientist, ScientistGetResponse> entityToDtoMapper() {
         return scientist -> ScientistGetResponse.builder()
-                .login(scientist.getLogin())
+                .login((scientist.getLogin() == null) ? "null" : scientist.getLogin())
                 .hirschIndex(scientist.getHirschIndex())
-                .website(scientist.getWebsite())
-                .education(scientist.getEducation())
+                .website((scientist.getWebsite() == null) ? "null" : scientist.getWebsite().toString())
+                .education((scientist.getEducation() == null) ? "null" : scientist.getEducation().toString())
                 .build();
     }
 

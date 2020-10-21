@@ -32,24 +32,37 @@ public class ScientistsGetResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
     @EqualsAndHashCode
-    public static class Scientist {
+    public static class ListScientist {
         private String login;
-        private URL website;
+        private String website;
     }
 
     @Singular
-    private List<Scientist> scientists;
+    private List<ListScientist> scientists;
 
     public static Function<Collection<pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist>, ScientistsGetResponse> entityToDtoMapper() {
         return scientists -> {
             ScientistsGetResponse.ScientistsGetResponseBuilder response = ScientistsGetResponse.builder();
             scientists.stream()
-                    .map(scientist -> Scientist.builder()
+                    .map(scientist -> ListScientist.builder()
                             .login(scientist.getLogin())
-                            .website(scientist.getWebsite())
-                            .build())
+                            .website((scientist.getWebsite() == null) ? "null" : scientist.getWebsite().toString())
+                            .build()
+                    )
                     .forEach(response::scientist);
             return response.build();
         };
+    }
+
+    public String getScientistsString() {
+        String res = "[\n";
+        for(int i=0; i<scientists.size(); i++)
+        {
+            ListScientist s = scientists.get(i);
+            res += (null == s) ? "NULL\n" : ((null == s.login) ?"null":s.login) + " " + ((null == s.website) ? "null" : s.website.toString()) + '\n';
+        }
+        res += ']';
+
+        return res;
     }
 }

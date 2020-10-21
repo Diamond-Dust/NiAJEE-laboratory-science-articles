@@ -23,6 +23,7 @@ public class AuthenticationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String servletPath = request.getServletPath();
+        response.getWriter().write(servletPath);
         if ("/api/scientist/login".equals(servletPath)) {
             if (!service.authenticate(
                     request.getParameter("login"),
@@ -31,6 +32,8 @@ public class AuthenticationServlet extends HttpServlet {
             ) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             }
+            else
+                response.getWriter().write(service.getLogged());
         } else if ("/api/scientist/logout".equals(servletPath)) {
             request.getSession().invalidate();
         } else {
