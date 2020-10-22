@@ -33,6 +33,7 @@
     </nav>
 
     <article class="text--justified">
+        <img id="img" />
         <header><h2>Edit character portrait</h2></header>
         <form class="avatar__form" id="avatarForm" method="post" enctype="multipart/form-data">
             <label for="avatar">Avatar:</label>
@@ -79,13 +80,7 @@
             const xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    let response = JSON.parse(this.responseText);
-                    for (const [key, value] of Object.entries(response)) {
-                        let input = document.getElementById(key);
-                        if (input) {
-                            input.value = value;
-                        }
-                    }
+                    document.getElementById('img').setAttribute('src', xhttp.responseURL + '?r=' + new Date().getTime());
                 }
             };
             xhttp.open("GET", getContextRoot() + '/api/avatars/' + login, true);
@@ -100,6 +95,12 @@
 
             let request = new FormData();
             request.append("avatar", document.getElementById('avatar').files[0]);
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 204) {
+                    loadAvatar(getUserLogin());
+                }
+            };
 
             xhttp.send(request);
 

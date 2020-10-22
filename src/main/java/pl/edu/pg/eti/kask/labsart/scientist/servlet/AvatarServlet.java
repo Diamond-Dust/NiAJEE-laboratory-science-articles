@@ -76,8 +76,11 @@ public class AvatarServlet extends HttpServlet {
 
         if (scientist.isPresent()) {
             Part portrait = request.getPart(Parameters.AVATAR);
+
             if (portrait != null) {
                 service.updateAvatar(login, portrait.getInputStream());
+            } else if (request.getContentLength() > 0) {
+                service.updateAvatar(login, request.getInputStream());
             }
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {

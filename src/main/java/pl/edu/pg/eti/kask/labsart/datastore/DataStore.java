@@ -10,7 +10,16 @@ import pl.edu.pg.eti.kask.labsart.serialisation.CloningUtility;
 import pl.edu.pg.eti.kask.labsart.util.Util;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -82,7 +91,10 @@ public class DataStore {
                     throw new IllegalArgumentException(
                             String.format("The scientist login \"%s\" is not unique", scientist.getLogin()));
                 },
-                () -> scientists.add(scientist));
+                () -> {
+                    scientists.add(scientist);
+                    savePicture(scientist);
+                });
     }
     public synchronized void createArticle(Article article) throws IllegalArgumentException {
         findArticle(article.getId()).ifPresentOrElse(
@@ -115,6 +127,7 @@ public class DataStore {
                 original -> {
                     scientists.remove(original);
                     scientists.add(scientist);
+                    savePicture(scientist);
                 },
                 () -> {
                     throw new IllegalArgumentException(
@@ -213,6 +226,27 @@ public class DataStore {
                 .filter(users -> users.getPassword().equals(password))
                 .findFirst()
                 .map(CloningUtility::clone);
+    }
+
+    private synchronized void savePicture(Scientist scientist) {
+        String avatarPath = System.getenv("AV_PATH");
+
+        String help = System.getProperty("java.class.path");
+        for(int i=0; i<5; i++)
+            help = help.substring(0, help.lastIndexOf(File.separator));
+        avatarPath = help + File.separator + avatarPath + File.separator;
+        String avatarFilePath = avatarPath + scientist.getLogin() + ".png";
+
+        try {
+            Files.createDirectories(Paths.get(avatarPath));
+            File imgPath = new File(avatarFilePath);
+            imgPath.createNewFile();
+            try (FileOutputStream fos = new FileOutputStream(avatarFilePath)) {
+                fos.write(scientist.getAvatar());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

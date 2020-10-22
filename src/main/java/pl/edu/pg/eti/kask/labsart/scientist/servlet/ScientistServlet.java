@@ -66,12 +66,6 @@ public class ScientistServlet extends HttpServlet {
 
 
     private void getScientists(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.getWriter().write(
-                ScientistsGetResponse.entityToDtoMapper()
-                    .apply(scientistService.findAll())
-                    .getScientistsString()
-        );
-
         try {
             response.getWriter()
                     .write(jsonb.toJson(ScientistsGetResponse
