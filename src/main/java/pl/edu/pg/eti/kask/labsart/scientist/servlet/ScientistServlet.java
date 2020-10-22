@@ -75,7 +75,8 @@ public class ScientistServlet extends HttpServlet {
                     );
         }
         catch(JsonbException e) {
-            response.getWriter().write("\n\n\n" + e.getMessage() + "\n\n\n" + e.getCause());
+            //response.getWriter().write("\n\n\n" + e.getMessage() + "\n\n\n" + e.getCause());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
