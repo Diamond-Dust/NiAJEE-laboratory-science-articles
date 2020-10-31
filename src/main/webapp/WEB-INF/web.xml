@@ -31,7 +31,7 @@
 
     <servlet>
         <servlet-name>avatarServlet</servlet-name>
-        <servlet-class>pl.edu.pg.eti.kask.labsart.scientist.servlet.AvatarServlet</servlet-class>
+        <servlet-class>pl.edu.pg.eti.kask.labsart.avatar.servlet.AvatarServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

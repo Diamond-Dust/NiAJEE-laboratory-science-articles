@@ -1,4 +1,4 @@
-package pl.edu.pg.eti.kask.labsart;
+package pl.edu.pg.eti.kask.labsart.commontypes;
 
 public enum Education {
     NONE,

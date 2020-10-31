@@ -1,6 +1,13 @@
 package pl.edu.pg.eti.kask.labsart.util;
 
+import pl.edu.pg.eti.kask.labsart.avatar.servlet.AvatarServlet;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -57,6 +64,26 @@ public class Util {
         }
 
         return path;
+    }
+
+    public static String getLoginFromPath(HttpServletRequest request, Pattern pattern) {
+        //Parsed request path is valid with character pattern and can contain starting and ending '/'.
+        return Util.getFirstGroupFromPath(
+            Util.parseRequestPath(request),
+            pattern
+        );
+    }
+
+    public static InputStream getInputStreamFromRequest(HttpServletRequest request, String partName) throws IOException, ServletException {
+        Part part = request.getPart(partName);
+
+        if (part != null) {
+            return part.getInputStream();
+        } else if (request.getContentLength() > 0) {
+            return request.getInputStream();
+        } else {
+            return null;
+        }
     }
 
 }

@@ -1,10 +1,8 @@
 package pl.edu.pg.eti.kask.labsart.scientist.dto;
 
 import lombok.*;
-import pl.edu.pg.eti.kask.labsart.Education;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
-import java.net.URL;
 import java.util.function.Function;
 
 @Getter

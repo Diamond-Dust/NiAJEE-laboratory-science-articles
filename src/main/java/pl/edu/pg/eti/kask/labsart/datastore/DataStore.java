@@ -3,21 +3,15 @@ package pl.edu.pg.eti.kask.labsart.datastore;
 import lombok.extern.java.Log;
 import pl.edu.pg.eti.kask.labsart.Article;
 import pl.edu.pg.eti.kask.labsart.Citation;
-import pl.edu.pg.eti.kask.labsart.Education;
 import pl.edu.pg.eti.kask.labsart.Publisher;
+import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.serialisation.CloningUtility;
-import pl.edu.pg.eti.kask.labsart.util.Util;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -31,6 +25,7 @@ public class DataStore {
     private Set<Article>   articles   = new HashSet<>();
     private Set<Citation>  citations  = new HashSet<>();
     private Set<Publisher> publishers = new HashSet<>();
+    private Set<Avatar>    avatars    = new HashSet<>();
 
 
     public synchronized List<Scientist> findAllScientists() {
@@ -45,18 +40,9 @@ public class DataStore {
     public synchronized List<Publisher> findAllPublishers() {
         return publishers.stream().map(CloningUtility::clone).collect(Collectors.toList());
     }
-    /*public synchronized List<Scientist> findAllScientists() {
-        return new ArrayList<>(scientists);
+    public synchronized List<Avatar> findAllAvatars() {
+        return avatars.stream().map(CloningUtility::clone).collect(Collectors.toList());
     }
-    public synchronized List<Article> findAllArticles() {
-        return new ArrayList<>(articles);
-    }
-    public synchronized List<Citation> findAllCitations() {
-        return new ArrayList<>(citations);
-    }
-    public synchronized List<Publisher> findAllPublishers() {
-        return new ArrayList<>(publishers);
-    }*/
 
 
     public Optional<Scientist> findScientist(String login) {
@@ -83,6 +69,12 @@ public class DataStore {
                 .findFirst()
                 .map(CloningUtility::clone);
     }
+    public Optional<Avatar> findAvatar(UUID id) {
+        return avatars.stream()
+                .filter(avatar -> avatar.getId().equals(id))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
 
 
     public synchronized void createScientist(Scientist scientist) throws IllegalArgumentException {
@@ -93,7 +85,6 @@ public class DataStore {
                 },
                 () -> {
                     scientists.add(scientist);
-                    savePicture(scientist);
                 });
     }
     public synchronized void createArticle(Article article) throws IllegalArgumentException {
@@ -120,6 +111,17 @@ public class DataStore {
                 },
                 () -> publishers.add(publisher));
     }
+    public synchronized void createAvatar(Avatar avatar) throws IllegalArgumentException {
+        findAvatar(avatar.getId()).ifPresentOrElse(
+                original -> {
+                    throw new IllegalArgumentException(
+                            String.format("The avatar id \"%s\" is not unique", avatar.getId()));
+                },
+                () -> {
+                    avatars.add(avatar);
+                    savePicture(avatar);
+                });
+    }
 
 
     public synchronized void updateScientist(Scientist scientist) throws IllegalArgumentException {
@@ -127,7 +129,6 @@ public class DataStore {
                 original -> {
                     scientists.remove(original);
                     scientists.add(scientist);
-                    savePicture(scientist);
                 },
                 () -> {
                     throw new IllegalArgumentException(
@@ -167,6 +168,18 @@ public class DataStore {
                             String.format("The publisher with id \"%d\" does not exist", publisher.getId()));
                 });
     }
+    public synchronized void updateAvatar(Avatar avatar) throws IllegalArgumentException {
+        findAvatar(avatar.getId()).ifPresentOrElse(
+                original -> {
+                    avatars.remove(original);
+                    avatars.add(avatar);
+                    savePicture(avatar);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The avatar with id \"%d\" does not exist", avatar.getId()));
+                });
+    }
 
 
 
@@ -202,6 +215,17 @@ public class DataStore {
                             String.format("The publisher with id \"%d\" does not exist", entity.getId()));
                 });
     }
+    public synchronized void deleteAvatar(Avatar entity) throws IllegalArgumentException {
+        findAvatar(entity.getId()).ifPresentOrElse(
+                original -> {
+                    avatars.remove(original);
+                    deletePicture(original);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The avatar with id \"%d\" does not exist", entity.getId()));
+                });
+    }
 
 
 
@@ -217,6 +241,9 @@ public class DataStore {
     public Stream<Publisher> getPublisherStream() {
         return publishers.stream();
     }
+    public Stream<Avatar> getAvatarStream() {
+        return avatars.stream();
+    }
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -228,25 +255,32 @@ public class DataStore {
                 .map(CloningUtility::clone);
     }
 
-    private synchronized void savePicture(Scientist scientist) {
+    private synchronized void savePicture(Avatar avatar) {
         String avatarPath = System.getenv("AV_PATH");
-
-        String help = System.getProperty("java.class.path");
-        for(int i=0; i<5; i++)
-            help = help.substring(0, help.lastIndexOf(File.separator));
-        avatarPath = help + File.separator + avatarPath + File.separator;
-        String avatarFilePath = avatarPath + scientist.getLogin() + ".png";
+        String avatarFilePath = avatarPath + File.separator + avatar.getId() + ".png";
 
         try {
             Files.createDirectories(Paths.get(avatarPath));
             File imgPath = new File(avatarFilePath);
             imgPath.createNewFile();
             try (FileOutputStream fos = new FileOutputStream(avatarFilePath)) {
-                fos.write(scientist.getAvatar());
+                fos.write(avatar.getAvatar());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private synchronized void deletePicture(Avatar avatar) {
+        String avatarPath = System.getenv("AV_PATH");
+        String avatarFilePath = avatarPath + File.separator + avatar.getId() + ".png";
+
+        try {
+            Files.createDirectories(Paths.get(avatarPath));
+            File imgPath = new File(avatarFilePath);
+            imgPath.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

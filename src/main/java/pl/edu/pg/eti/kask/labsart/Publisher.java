@@ -2,6 +2,7 @@ package pl.edu.pg.eti.kask.labsart;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.edu.pg.eti.kask.labsart.commontypes.Specialisation;
 
 import java.io.Serializable;
 

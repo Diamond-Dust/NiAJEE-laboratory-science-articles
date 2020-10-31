@@ -2,10 +2,11 @@ package pl.edu.pg.eti.kask.labsart.scientist.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.edu.pg.eti.kask.labsart.Education;
+import pl.edu.pg.eti.kask.labsart.commontypes.Education;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class Scientist implements Serializable {
     private double    hirschIndex;
     private URL       website;
     private Education education;
-    private byte[]    avatar;
+    private UUID      avatarId;
 
     //-----------------------------------------------
 

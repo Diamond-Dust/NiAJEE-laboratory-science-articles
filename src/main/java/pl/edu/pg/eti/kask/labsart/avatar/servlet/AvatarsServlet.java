@@ -1,4 +1,4 @@
-package pl.edu.pg.eti.kask.labsart.scientist.servlet;
+package pl.edu.pg.eti.kask.labsart.avatar.servlet;
 
 import pl.edu.pg.eti.kask.labsart.util.Util;
 
