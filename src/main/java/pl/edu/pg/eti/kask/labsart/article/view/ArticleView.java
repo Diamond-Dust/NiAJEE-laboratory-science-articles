@@ -10,6 +10,7 @@ import pl.edu.pg.eti.kask.labsart.citation.service.CitationService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
 
-@RequestScoped
+@ViewScoped
 @Named
 public class ArticleView implements Serializable {
 
