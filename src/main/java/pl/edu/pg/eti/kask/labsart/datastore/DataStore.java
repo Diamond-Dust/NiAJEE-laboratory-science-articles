@@ -1,9 +1,9 @@
 package pl.edu.pg.eti.kask.labsart.datastore;
 
 import lombok.extern.java.Log;
-import pl.edu.pg.eti.kask.labsart.Article;
-import pl.edu.pg.eti.kask.labsart.Citation;
-import pl.edu.pg.eti.kask.labsart.Publisher;
+import pl.edu.pg.eti.kask.labsart.article.entity.Article;
+import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
+import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.serialisation.CloningUtility;
@@ -107,7 +107,7 @@ public class DataStore {
         findPublisher(publisher.getId()).ifPresentOrElse(
                 original -> {
                     throw new IllegalArgumentException(
-                            String.format("The publisher id \"%s\" is not unique", publisher.getId()));
+                            String.format("The publisher id \"%d\" is not unique", publisher.getId()));
                 },
                 () -> publishers.add(publisher));
     }
@@ -177,7 +177,7 @@ public class DataStore {
                 },
                 () -> {
                     throw new IllegalArgumentException(
-                            String.format("The avatar with id \"%d\" does not exist", avatar.getId()));
+                            String.format("The avatar with id \"%s\" does not exist", avatar.getId()));
                 });
     }
 
@@ -223,7 +223,7 @@ public class DataStore {
                 },
                 () -> {
                     throw new IllegalArgumentException(
-                            String.format("The avatar with id \"%d\" does not exist", entity.getId()));
+                            String.format("The avatar with id \"%s\" does not exist", entity.getId()));
                 });
     }
 

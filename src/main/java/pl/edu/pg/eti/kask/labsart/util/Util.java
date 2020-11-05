@@ -66,7 +66,7 @@ public class Util {
         return path;
     }
 
-    public static String getLoginFromPath(HttpServletRequest request, Pattern pattern) {
+    public static String getFirstFromPath(HttpServletRequest request, Pattern pattern) {
         //Parsed request path is valid with character pattern and can contain starting and ending '/'.
         return Util.getFirstGroupFromPath(
             Util.parseRequestPath(request),

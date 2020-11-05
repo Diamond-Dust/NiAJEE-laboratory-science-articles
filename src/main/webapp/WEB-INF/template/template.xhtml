@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta name="description" content="Simple app for sharing published science articles"/>
+        <meta name="keywords" content="science, articles, publishers"/>
+        <meta name="author" content="Mrugala"/>
+
+        <title>LabSArt</title>
+
+        <h:outputStylesheet library="default" name="css/styles.css"/>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <header class="header">
+                <div class="header-text">
+                    <h1>Lab Science Articles</h1>
+                </div>
+            </header>
+
+            <nav class="navigation-bar">
+                <ul>
+                    <li><h:link outcome="/index.xhtml">main</h:link></li>
+                    <!--<li><h:link outcome="/about/about.xhtml">about</h:link></li>
+                    <li><h:link outcome="/scientist/scientist_list.xhtml">scientists</h:link></li>
+                    <li><h:link outcome="/publisher/publisher_list.xhtml">publishers</h:link></li>-->
+                    <li><h:link outcome="/article/article_list.xhtml">articles</h:link></li>
+                </ul>
+            </nav>
+
+            <section class="main-section">
+                <ui:insert name="content"/>
+            </section>
+
+            <footer class="footer">
+                <p>By L. Mrugala, 171914</p>
+            </footer>
+        </div>
+    </h:body>
+</f:view>
+</html>

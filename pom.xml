@@ -9,7 +9,7 @@
     <version>0.0</version>
     <packaging>war</packaging>
 
-    <name>pl.edu.pg.eti.kask.labsart.Article Database</name>
+    <name>pl.edu.pg.eti.kask.labsart.article.entity.Article Database</name>
     <description>NiAJEE Laboratory implementing a simple article database</description>
 
     <properties>

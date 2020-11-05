@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/template.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{citationView.id}" required="true"/>
+        <f:viewAction action="#{citationView.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <!-- <h:outputStylesheet library="article" name="css/article_view.css"/> -->
+        <h:panelGroup rendered="true" layout="block">
+            <article class="text--justified">
+                <header><h2>Inner ID: <h:outputText value="#{citationView.citation.id}"/></h2></header>
+                <div class="article__grid">
+                    <div class="article__page_number">
+                        Page number: <h:outputText value="#{citationView.citation.pageNumber}"/>
+                    </div>
+                    <div class="article__source">
+                        Source: <h:outputText value="#{citationView.citation.source}"/>
+                    </div>
+                </div>
+            </article>
+        </h:panelGroup>
+    </ui:define>
+
+</ui:composition>

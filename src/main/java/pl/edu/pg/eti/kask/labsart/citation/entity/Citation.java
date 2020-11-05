@@ -1,8 +1,7 @@
-package pl.edu.pg.eti.kask.labsart;
+package pl.edu.pg.eti.kask.labsart.citation.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.edu.pg.eti.kask.labsart.commontypes.Specialisation;
 
 import java.io.Serializable;
 
@@ -13,12 +12,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Publisher implements Serializable {
-    private Long           id;
-    private String         name;
-    private Specialisation spec;
-    private boolean        predatory;
-    private double         impactFactor;
+public class Citation implements Serializable {
+    private Long   id;
+    private String source;
+    private int    pageNumber;
 
     //-----------------------------------------------
 

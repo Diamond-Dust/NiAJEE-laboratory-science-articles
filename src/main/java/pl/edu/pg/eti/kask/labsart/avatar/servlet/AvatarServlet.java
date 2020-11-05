@@ -13,14 +13,13 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static pl.edu.pg.eti.kask.labsart.util.Util.getLoginFromPath;
+import static pl.edu.pg.eti.kask.labsart.util.Util.getFirstFromPath;
 
 @MultipartConfig(maxFileSize = 1024 * 1024)
 public class AvatarServlet extends HttpServlet {
@@ -88,7 +87,7 @@ public class AvatarServlet extends HttpServlet {
     // -----------------------------------------------------------------------------------------------------------------
 
     private void postPortrait(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String login = getLoginFromPath(request, pattern);
+        String login = getFirstFromPath(request, pattern);
         Optional<Scientist> scientist = scientistService.find(login);
 
         if (scientist.isPresent()) {
@@ -108,7 +107,7 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void putPortrait(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String login = getLoginFromPath(request, pattern);
+        String login = getFirstFromPath(request, pattern);
         Optional<Scientist> scientist = scientistService.find(login);
 
         if (scientist.isPresent()) {
@@ -128,7 +127,7 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void getPortrait(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String login = getLoginFromPath(request, pattern);
+        String login = getFirstFromPath(request, pattern);
         Optional<Scientist> scientist = scientistService.find(login);
 
         if (scientist.isPresent()) {
@@ -146,7 +145,7 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void deletePortrait(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String login = getLoginFromPath(request, pattern);
+        String login = getFirstFromPath(request, pattern);
         Optional<Scientist> scientist = scientistService.find(login);
 
         if (scientist.isPresent()) {
