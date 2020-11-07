@@ -15,9 +15,22 @@
             <article class="text--justified">
                 <h:form>
                     <h:inputHidden value="#{citationCreate.id}" required="true" />
-                    <h:inputText value="#{citationCreate.citation.pageNumber}" converterMessage="Please enter digits only." required="true" />
-                    <h:inputText value="#{citationCreate.citation.source}" required="true"  />
+
+                    <h:outputLabel for="pagenum">Page Number</h:outputLabel>
+                    <h:inputText id="pagenum" value="#{citationCreate.citation.pageNumber}" converterMessage="Please enter digits only." required="true" />
+
+                    <h:outputLabel for="source">Source</h:outputLabel>
+                    <h:inputText id="source" value="#{citationCreate.citation.source}" required="true"  />
+
                     <!-- wybór kategorii -->
+                    <h:outputLabel for="article">Article</h:outputLabel>
+                    <h:selectOneMenu id="article" value="#{citationCreate.article}" converter="articleCreateConverter">
+                        <f:selectItems value="#{citationCreate.articles}" var="article"
+                                       itemValue="#{article}"
+                                       itemLabel="#{article.title}"/>
+                    </h:selectOneMenu>
+                    <!-- wybór kategorii -->
+
                     <h:commandButton action="#{citationCreate.saveAction()}" value="submit"/><!--action="#{bean.submit}"-->
                     <h:messages />
                 </h:form>

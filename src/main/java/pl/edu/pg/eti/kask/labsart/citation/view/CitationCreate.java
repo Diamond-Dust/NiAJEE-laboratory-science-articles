@@ -2,19 +2,17 @@ package pl.edu.pg.eti.kask.labsart.citation.view;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
+import pl.edu.pg.eti.kask.labsart.article.entity.Article;
+import pl.edu.pg.eti.kask.labsart.article.service.ArticleService;
 import pl.edu.pg.eti.kask.labsart.citation.model.CitationCreateModel;
-import pl.edu.pg.eti.kask.labsart.citation.model.CitationEditModel;
 import pl.edu.pg.eti.kask.labsart.citation.service.CitationService;
 
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Optional;
+import java.util.List;
 
 @ViewScoped
 @Named
@@ -23,7 +21,8 @@ public class CitationCreate implements Serializable {
     /**
      * Citation for managing articles.
      */
-    private final CitationService service;
+    private final CitationService citationService;
+    private final ArticleService  articleService;
 
     /**
      * Citation id.
@@ -31,6 +30,12 @@ public class CitationCreate implements Serializable {
     @Setter
     @Getter
     private Long id;
+    @Setter
+    @Getter
+    private List<Article> articles;
+    @Setter
+    @Getter
+    private Article article;
 
     /**
      * Citation exposed to the view.
@@ -39,8 +44,9 @@ public class CitationCreate implements Serializable {
     private CitationCreateModel citation;
 
     @Inject
-    public CitationCreate(CitationService service) {
-        this.service = service;
+    public CitationCreate(CitationService citationService, ArticleService articleService) {
+        this.citationService = citationService;
+        this.articleService = articleService;
     }
 
     /**
@@ -48,8 +54,9 @@ public class CitationCreate implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        id = service.getNewId();
+        id = citationService.getNewId();
         citation = new CitationCreateModel();
+        articles = articleService.findAll();
     }
 
     /**
@@ -58,7 +65,7 @@ public class CitationCreate implements Serializable {
      * @return navigation case to the same page
      */
     public String saveAction() {
-        service.createCitation(7641L, CitationCreateModel.modelToEntityUpdater().apply(id, citation));
+        citationService.createCitation(article.getId(), CitationCreateModel.modelToEntityUpdater().apply(id, citation));
         String viewId = "/citation/citation_view?id=" + id; //FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "&faces-redirect=true&includeViewParams=true";
     }

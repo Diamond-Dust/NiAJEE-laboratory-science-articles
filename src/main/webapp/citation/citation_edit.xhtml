@@ -15,9 +15,22 @@
         <h:panelGroup rendered="true" layout="block">
             <article class="text--justified">
                 <h:form>
-                    <h:inputText value="#{citationEdit.citation.pageNumber}" converterMessage="Please enter digits only." required="true" />
-                    <h:inputText value="#{citationEdit.citation.source}" required="true"  />
+
+                    <h:outputLabel for="pagenum">Page Number</h:outputLabel>
+                    <h:inputText id="pagenum" value="#{citationEdit.citation.pageNumber}" converterMessage="Please enter digits only." required="true" />
+
+                    <h:outputLabel for="source">Source</h:outputLabel>
+                    <h:inputText id="source" value="#{citationEdit.citation.source}" required="true"  />
+
                     <!-- wybór kategorii -->
+                    <h:outputLabel for="article">Article</h:outputLabel>
+                    <h:selectOneMenu id="article" value="#{citationEdit.article}" converter="articleEditConverter">
+                        <f:selectItems value="#{citationEdit.articles}" var="article"
+                                       itemValue="#{article}"
+                                       itemLabel="#{article.title}"/>
+                    </h:selectOneMenu>
+                    <!-- wybór kategorii -->
+
                     <h:commandButton action="#{citationEdit.saveAction()}"  value="submit"/><!--action="#{bean.submit}"-->
                     <h:messages />
                 </h:form>

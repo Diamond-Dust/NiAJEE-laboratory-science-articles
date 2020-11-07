@@ -61,6 +61,22 @@ public class CitationService {
         }
     }
 
+    public void updateArticleCitation(Article newArticle, Citation citation) {
+        List<Article> articles = articleRepository.findAll();
+        Optional<Citation> cit = citationRepository.find(citation.getId());
+        if(cit.isPresent()) {
+            for (Article article : articles) {
+                if(article.getCitations().contains(cit.get())) {
+                    article.getCitations().remove(cit.get());
+                    articleRepository.update(article);
+                }
+            }
+            citationRepository.update(citation);
+            newArticle.getCitations().add(citation);
+            articleRepository.update(newArticle);
+        }
+    }
+
     public void updateCitation(Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());
