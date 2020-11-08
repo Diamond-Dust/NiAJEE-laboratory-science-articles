@@ -13,6 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -44,7 +45,21 @@ public class ArticleService {
     }
 
     public void delete(Long article) {
+        Optional<Article> articleObject = articleRepository.find(article);
+        if(articleObject.isPresent()) {
+            List<Citation> citations = articleObject.get().getCitations();
+            for (Citation citation : citations){
+                citationRepository.delete(citation);
+            }
+        }
         articleRepository.delete(articleRepository.find(article).orElseThrow());
+    }
+
+    public void deleteAll() {
+        List<Article> articles = articleRepository.findAll();
+        for (Article article : articles){
+            delete(article.getId());
+        }
     }
 
     public void update(Article article) {
@@ -52,6 +67,26 @@ public class ArticleService {
     }
 
     //-----------------------------------------------
+
+    private Long getNewId() {
+        Random r = new Random();
+        long generatedLong = r.nextLong();
+        while(find(generatedLong).isPresent())
+            generatedLong = r.nextLong();
+        return generatedLong;
+    }
+
+    public void createWithoutId(Article article) {
+        article.setId(getNewId());
+        articleRepository.create(article);
+    }
+
+    public void updateNonNullId(Article article, Long id) {
+        find(id).ifPresentOrElse(
+                original -> {articleRepository.update(Article.nonNullUpdateMapper().apply(original, article));},
+                () -> { throw new NullPointerException();}
+        );
+    }
 
     public void deleteCitation(Long articleId, Long citationId) {
         Optional<Article> article = articleRepository.find(articleId);

@@ -9,6 +9,7 @@ import pl.edu.pg.eti.kask.labsart.citation.repository.CitationRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -51,6 +52,52 @@ public class CitationService {
     }
 
     //-----------------------------------------------
+
+    public List<Citation> findAllForArticle(Long articleId) {
+        Optional<Article> article = articleRepository.find(articleId);
+        if(article.isPresent()) {
+            return article.get().getCitations();
+        }
+        return Collections.emptyList();
+    }
+
+    public void createWithoutId(Citation citation, Long articleId) {
+        citation.setId(getNewId());
+        createCitation(articleId, citation);
+    }
+
+    public void updateNonNullId(Citation citation, Long id) {
+        find(id).ifPresentOrElse(
+                original -> {citationRepository.update(Citation.nonNullUpdateMapper().apply(original, citation));},
+                () -> { throw new NullPointerException();}
+        );
+    }
+
+    public void deleteCitationForArticle(Long citationId, Long articleId) {
+        Optional<Article> article = articleRepository.find(articleId);
+        Optional<Citation> cit = citationRepository.find(citationId);
+        if(cit.isPresent()) {
+            if (article.isPresent()) {
+                if(article.get().getCitations().contains(cit.get())) {
+                    article.get().getCitations().remove(cit.get());
+                    articleRepository.update(article.get());
+                }
+            }
+            citationRepository.delete(cit.get());
+        }
+    }
+
+    public void deleteAllForArticle(Long articleId) {
+        Optional<Article> article = articleRepository.find(articleId);
+        if (article.isPresent()) {
+            List<Citation> citations = article.get().getCitations();
+            for (Citation citation : citations) {
+                article.get().getCitations().remove(citation);
+                citationRepository.delete(citation);
+            }
+            articleRepository.update(article.get());
+        }
+    }
 
     public void createCitation(Long articleId, Citation citation) {
         Optional<Article> article = articleRepository.find(articleId);

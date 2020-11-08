@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.util.function.BiFunction;
 
 @Getter
 @Setter
@@ -15,11 +16,19 @@ import java.io.Serializable;
 public class Citation implements Serializable {
     private Long   id;
     private String source;
-    private int    pageNumber;
+    private Integer pageNumber;
 
     //-----------------------------------------------
 
     //-----------------------------------------------
 
     //-----------------------------------------------
+
+    public static BiFunction<Citation, Citation, Citation> nonNullUpdateMapper() {
+        return (toChange, newOne) -> Citation.builder()
+                .id(newOne.getId() != null ? newOne.getId() : toChange.getId())
+                .source(newOne.getSource() != null ? newOne.getSource() : toChange.getSource())
+                .pageNumber(newOne.getPageNumber() != null ? newOne.getPageNumber() : toChange.getPageNumber())
+                .build();
+    }
 }
