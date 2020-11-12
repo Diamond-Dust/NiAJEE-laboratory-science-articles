@@ -66,9 +66,21 @@ public class CitationService {
         createCitation(articleId, citation);
     }
 
-    public void updateNonNullId(Citation citation, Long id) {
+    public void updateNonNullId(Citation citation, Long id, Long articleId) {
         find(id).ifPresentOrElse(
-                original -> {citationRepository.update(Citation.nonNullUpdateMapper().apply(original, citation));},
+                original -> {
+                    articleRepository.find(articleId).ifPresentOrElse(
+                        article -> {
+                            if(article.getCitations().contains(original)) {
+                                article.getCitations().remove(original);
+                                article.getCitations().add(Citation.nonNullUpdateMapper().apply(original, citation));
+                                articleRepository.update(article);
+                            }
+                        },
+                        () -> { throw new NullPointerException();}
+                    );
+                    citationRepository.update(Citation.nonNullUpdateMapper().apply(original, citation));
+                },
                 () -> { throw new NullPointerException();}
         );
     }

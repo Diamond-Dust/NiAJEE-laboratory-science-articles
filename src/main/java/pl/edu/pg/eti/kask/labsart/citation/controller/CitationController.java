@@ -90,7 +90,7 @@ public class CitationController {
         Response.ResponseBuilder response;
 
         try {
-            service.updateNonNullId(PutCitationRequest.dtoToEntityMapper().apply(citation), id);
+            service.updateNonNullId(PutCitationRequest.dtoToEntityMapper().apply(citation), id, articleId);
             response = Response.ok();
         } catch (NullPointerException e) {
             response = Response.status(Response.Status.NOT_FOUND).entity("Citation not found for ID: " + id);
