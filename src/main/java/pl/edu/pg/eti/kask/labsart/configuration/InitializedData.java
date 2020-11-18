@@ -14,6 +14,7 @@ import pl.edu.pg.eti.kask.labsart.util.Util;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
+import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -25,12 +26,15 @@ public class InitializedData {
     private final PublisherService publisherService;
     private final CitationService  citationService;
 
+    private RequestContextController requestContextController;
+
     @Inject
-    public InitializedData (ScientistService scientistService, ArticleService articleService, PublisherService publisherService, CitationService citationService) {
+    public InitializedData (ScientistService scientistService, ArticleService articleService, PublisherService publisherService, CitationService citationService, RequestContextController requestContextController) {
         this.scientistService = scientistService;
         this.articleService   = articleService;
         this.publisherService = publisherService;
         this.citationService = citationService;
+        this.requestContextController = requestContextController;
     }
 
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -38,6 +42,8 @@ public class InitializedData {
     }
 
     private synchronized void init() {
+        requestContextController.activate();
+
 
         Scientist einstein = Scientist.builder()
                 .login("einstein33")
@@ -180,6 +186,7 @@ public class InitializedData {
         articleService.create(a3);
         articleService.create(a4);
 
+        requestContextController.deactivate();
     }
 
 

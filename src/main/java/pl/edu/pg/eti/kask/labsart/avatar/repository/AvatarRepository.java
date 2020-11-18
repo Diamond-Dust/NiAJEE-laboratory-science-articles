@@ -1,51 +1,62 @@
 package pl.edu.pg.eti.kask.labsart.avatar.repository;
 
+import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Dependent
+
+@RequestScoped
 public class AvatarRepository  implements Repository<Avatar, UUID> {
-    private DataStore store;
+    private EntityManager em;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
 
     //-----------------------------------------------
-
-    @Inject
-    public AvatarRepository(DataStore store) {
-        this.store = store;
-    }
 
     //-----------------------------------------------
 
     @Override
     public Optional<Avatar> find(UUID id) {
-        return store.findAvatar(id);
+        return Optional.ofNullable(em.find(Avatar.class, id));
     }
 
     @Override
     public List<Avatar> findAll() {
-        return store.findAllAvatars();
+        return em.createQuery("select a from Avatar a", Avatar.class).getResultList();
     }
 
     @Override
     public void create(Avatar entity) {
-        store.createAvatar(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Avatar entity) {
-        store.deleteAvatar(entity);
+        em.remove(em.find(Avatar.class, entity.getId()));
     }
 
     @Override
     public void update(Avatar entity) {
-        store.updateAvatar(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Avatar entity) {
+        em.detach(entity);
     }
 }

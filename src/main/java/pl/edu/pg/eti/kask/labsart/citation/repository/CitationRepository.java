@@ -6,45 +6,54 @@ import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Dependent
+
+@RequestScoped
 public class CitationRepository  implements Repository<Citation, Long> {
-    private DataStore store;
+    private EntityManager em;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 
     //-----------------------------------------------
-
-    @Inject
-    public CitationRepository(DataStore store) {
-        this.store = store;
-    }
 
     //-----------------------------------------------
 
     @Override
     public Optional<Citation> find(Long id) {
-        return store.findCitation(id);
+        return Optional.ofNullable(em.find(Citation.class, id));
     }
 
     @Override
     public List<Citation> findAll() {
-        return store.findAllCitations();
+        return em.createQuery("select c from Citation c", Citation.class).getResultList();
     }
 
     @Override
     public void create(Citation entity) {
-        store.createCitation(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Citation entity) {
-        store.deleteCitation(entity);
+        em.remove(em.find(Citation.class, entity.getId()));
     }
 
     @Override
     public void update(Citation entity) {
-        store.updateCitation(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Citation entity) {
+        em.detach(entity);
     }
 }

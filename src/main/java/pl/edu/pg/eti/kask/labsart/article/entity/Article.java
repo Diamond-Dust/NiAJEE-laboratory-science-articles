@@ -2,18 +2,15 @@ package pl.edu.pg.eti.kask.labsart.article.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.edu.pg.eti.kask.labsart.article.dto.PutArticleRequest;
 import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @Getter
 @Setter
@@ -22,12 +19,26 @@ import java.util.function.Function;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "articles")
 public class Article implements Serializable {
+    @Id
     private Long          id;
+
     private String        title;
+
+    @ManyToOne
+    @JoinColumn(name ="publisher")
     private Publisher     publisher;
+
+    @ManyToOne
+    @JoinColumn(name ="scientist")
     private Scientist     author;
+
     @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Citation> citations = new ArrayList<>();
 
     //-----------------------------------------------

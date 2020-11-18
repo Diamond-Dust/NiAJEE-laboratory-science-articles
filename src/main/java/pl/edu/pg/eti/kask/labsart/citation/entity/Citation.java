@@ -2,7 +2,9 @@ package pl.edu.pg.eti.kask.labsart.citation.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.function.BiFunction;
 
@@ -13,10 +15,19 @@ import java.util.function.BiFunction;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "citations")
 public class Citation implements Serializable {
-    private Long   id;
-    private String source;
+    @Id
+    private Long    id;
+
+    private String  source;
+
     private Integer pageNumber;
+
+    @ManyToOne
+    @JoinColumn(name ="article")
+    private Article article;
 
     //-----------------------------------------------
 

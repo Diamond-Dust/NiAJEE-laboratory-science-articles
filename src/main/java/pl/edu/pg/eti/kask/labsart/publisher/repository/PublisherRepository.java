@@ -3,48 +3,59 @@ package pl.edu.pg.eti.kask.labsart.publisher.repository;
 import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Dependent
+
+@RequestScoped
 public class PublisherRepository implements Repository<Publisher, Long> {
-    private DataStore store;
+    private EntityManager em;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
 
     //-----------------------------------------------
-
-    @Inject
-    public PublisherRepository(DataStore store) {
-            this.store = store;
-    }
 
     //-----------------------------------------------
 
     @Override
     public Optional<Publisher> find(Long id) {
-            return store.findPublisher(id);
+        return Optional.ofNullable(em.find(Publisher.class, id));
     }
 
     @Override
     public List<Publisher> findAll() {
-            return store.findAllPublishers();
+        return em.createQuery("select p from Publisher p", Publisher.class).getResultList();
     }
 
     @Override
     public void create(Publisher entity) {
-            store.createPublisher(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Publisher entity) {
-            store.deletePublisher(entity);
+        em.remove(em.find(Publisher.class, entity.getId()));
     }
 
     @Override
     public void update(Publisher entity) {
-            store.updatePublisher(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Publisher entity) {
+        em.detach(entity);
     }
 
     //-----------------------------------------------

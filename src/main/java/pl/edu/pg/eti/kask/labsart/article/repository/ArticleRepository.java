@@ -6,46 +6,57 @@ import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Dependent
+
+@RequestScoped
 public class ArticleRepository  implements Repository<Article, Long> {
-    private DataStore store;
+    private EntityManager em;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
 
     //-----------------------------------------------
-
-    @Inject
-    public ArticleRepository(DataStore store) {
-        this.store = store;
-    }
 
     //-----------------------------------------------
 
     @Override
     public Optional<Article> find(Long id) {
-        return store.findArticle(id);
+        return Optional.ofNullable(em.find(Article.class, id));
     }
 
     @Override
     public List<Article> findAll() {
-        return store.findAllArticles();
+        return em.createQuery("select a from Article a", Article.class).getResultList();
     }
 
     @Override
     public void create(Article entity) {
-        store.createArticle(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Article entity) {
-        store.deleteArticle(entity);
+        em.remove(em.find(Article.class, entity.getId()));
     }
 
     @Override
     public void update(Article entity) {
-        store.updateArticle(entity);
+        em.merge(entity);
     }
+
+    @Override
+    public void detach(Article entity) {
+        em.detach(entity);
+    }
+
 }
