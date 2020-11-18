@@ -131,7 +131,7 @@ public class AvatarServlet extends HttpServlet {
         Optional<Scientist> scientist = scientistService.find(login);
 
         if (scientist.isPresent()) {
-            Optional<Avatar> avatar = avatarService.find(scientist.get().getAvatarId());
+            Optional<Avatar> avatar = avatarService.find(scientist.get().getAvatar().getId());
             if(avatar.isPresent()) {
                 //Type should be stored in the database but in this project we assume everything to be png.
                 response.addHeader(HttpHeaders.CONTENT_TYPE, "image/png");

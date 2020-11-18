@@ -8,6 +8,7 @@ import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,15 +36,17 @@ public class PublisherService {
 
     public List<Publisher> findAll() { return repository.findAll(); }
 
-
+    @Transactional
     public void create(Publisher publisher) {
         repository.create(publisher);
     }
 
+    @Transactional
     public void delete(Publisher entity) {
         repository.delete(entity);
     }
 
+    @Transactional
     public void update(Publisher entity) {
         repository.update(entity);
     }

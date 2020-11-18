@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Optional;
 
 @Path("/article")
@@ -29,7 +30,13 @@ public class ArticleController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllArticles() {
-        Response.ResponseBuilder response = Response.ok(GetArticlesResponse.entityToDtoMapper().apply(service.findAll()));
+        Response.ResponseBuilder response;
+
+        List<Article> articles = service.findAll();
+        GetArticlesResponse articlesResponse = GetArticlesResponse.entityToDtoMapper().apply(articles);
+
+        response = Response.ok(articlesResponse);
+
         return response.build();
     }
 

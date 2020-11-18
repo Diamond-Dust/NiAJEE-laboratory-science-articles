@@ -9,6 +9,7 @@ import pl.edu.pg.eti.kask.labsart.citation.repository.CitationRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +40,17 @@ public class CitationService {
 
     public List<Citation> findAll() { return citationRepository.findAll(); }
 
+    @Transactional
     public void create(Citation citation) {
         citationRepository.create(citation);
     }
 
+    @Transactional
     public void delete(Long citation) {
         citationRepository.delete(citationRepository.find(citation).orElseThrow());
     }
 
+    @Transactional
     public void update(Citation citation) {
         citationRepository.update(citation);
     }
@@ -61,11 +65,12 @@ public class CitationService {
         return Collections.emptyList();
     }
 
+    @Transactional
     public void createWithoutId(Citation citation, Long articleId) {
-        citation.setId(getNewId());
         createCitation(articleId, citation);
     }
 
+    @Transactional
     public void updateNonNullId(Citation citation, Long id, Long articleId) {
         find(id).ifPresentOrElse(
                 original -> {
@@ -85,6 +90,7 @@ public class CitationService {
         );
     }
 
+    @Transactional
     public void deleteCitationForArticle(Long citationId, Long articleId) {
         Optional<Article> article = articleRepository.find(articleId);
         Optional<Citation> cit = citationRepository.find(citationId);
@@ -99,6 +105,7 @@ public class CitationService {
         }
     }
 
+    @Transactional
     public void deleteAllForArticle(Long articleId) {
         Optional<Article> article = articleRepository.find(articleId);
         if (article.isPresent()) {
@@ -111,15 +118,17 @@ public class CitationService {
         }
     }
 
+    @Transactional
     public void createCitation(Long articleId, Citation citation) {
         Optional<Article> article = articleRepository.find(articleId);
         if(article.isPresent()) {
+            citationRepository.create(citation);
             article.get().getCitations().add(citation);
             articleRepository.update(article.get());
-            citationRepository.create(citation);
         }
     }
 
+    @Transactional
     public void updateArticleCitation(Article newArticle, Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());
@@ -130,12 +139,17 @@ public class CitationService {
                     articleRepository.update(article);
                 }
             }
+            newArticle.getCitations().remove(cit.get());
+
+            citation.setArticle(newArticle);
             citationRepository.update(citation);
+
             newArticle.getCitations().add(citation);
             articleRepository.update(newArticle);
         }
     }
 
+    @Transactional
     public void updateCitation(Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());
@@ -149,16 +163,5 @@ public class CitationService {
             }
             citationRepository.update(citation);
         }
-    }
-
-    public Long getNewId() {
-        List<Long> citationIds = citationRepository.findAll().stream().map(Citation::getId).collect(Collectors.toList());
-        Random r = new Random();
-        long generatedLong = r.nextLong();
-        //Naiive
-        while(citationIds.contains(generatedLong)) {
-            generatedLong = r.nextLong();
-        }
-        return generatedLong;
     }
 }

@@ -1,43 +1,23 @@
 package pl.edu.pg.eti.kask.labsart.article.dto;
 
 import lombok.*;
-import pl.edu.pg.eti.kask.labsart.article.entity.Article;
-import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-@Getter
-@Setter
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
-@EqualsAndHashCode
+@Data
 public class GetArticlesResponse {
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @ToString
-    @EqualsAndHashCode
-    public static class Article {
-
-        private Long id;
-        private String title;
-        @Singular
-        private List<Citation> citations;
-
-    }
 
     /**
      * Name of the selected characters.
      */
     @Singular
-    private List<Article> articles;
+    private List<ArticleModel> articleModels;
 
     /**
      * @return mapper for convenient converting entity object to dto object
@@ -46,12 +26,12 @@ public class GetArticlesResponse {
         return articles -> {
             GetArticlesResponseBuilder response = GetArticlesResponse.builder();
             articles.stream()
-                    .map(article -> Article.builder()
+                    .map(article -> ArticleModel.builder()
                             .id(article.getId())
                             .title(article.getTitle())
-                            .citations(article.getCitations())
+                            .citationModels(CitationModel.entitiesToDtosMapper().apply(article.getCitations()))
                             .build())
-                    .forEach(response::article);
+                    .forEach(response::articleModel);
             return response.build();
         };
     }

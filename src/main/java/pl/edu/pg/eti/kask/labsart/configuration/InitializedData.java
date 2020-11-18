@@ -112,43 +112,6 @@ public class InitializedData {
         publisherService.create(p3);
         publisherService.create(p4);
 
-        Citation c1 = Citation.builder()
-                .id(93825L)
-                .pageNumber(1)
-                .source("Smart stuff for CS")
-                .build();
-        Citation c2 = Citation.builder()
-                .id(63425L)
-                .pageNumber(5)
-                .source("Smart stuff for CS")
-                .build();
-        Citation c3 = Citation.builder()
-                .id(9325L)
-                .pageNumber(74)
-                .source("Smart stuff for CS")
-                .build();
-        Citation c4 = Citation.builder()
-                .id(13825L)
-                .pageNumber(41)
-                .source("Big Book")
-                .build();
-        Citation c5 = Citation.builder()
-                .id(6315L)
-                .pageNumber(2)
-                .source("Smol book")
-                .build();
-        Citation c6 = Citation.builder()
-                .id(9125L)
-                .pageNumber(14)
-                .source("Yes He Canned")
-                .build();
-
-        citationService.create(c1);
-        citationService.create(c2);
-        citationService.create(c3);
-        citationService.create(c4);
-        citationService.create(c5);
-        citationService.create(c6);
 
         Article a1 = Article.builder()
                 .id(7641L)
@@ -156,18 +119,12 @@ public class InitializedData {
                 .author(dijkstra)
                 .publisher(p3)
                 .build();
-        a1.getCitations().add(c1);
-        a1.getCitations().add(c2);
-        a1.getCitations().add(c3);
         Article a2 = Article.builder()
                 .id(8743L)
                 .title("Smart dolphin")
                 .author(aaa)
                 .publisher(p4)
                 .build();
-        a2.getCitations().add(c4);
-        a2.getCitations().add(c5);
-        a2.getCitations().add(c6);
         Article a3 = Article.builder()
                 .id(90L)
                 .title("Houses of Glass")
@@ -181,10 +138,86 @@ public class InitializedData {
                 .publisher(p1)
                 .build();
 
+
         articleService.create(a1);
         articleService.create(a2);
         articleService.create(a3);
         articleService.create(a4);
+
+        p3.getArticles().add(a1);
+        p4.getArticles().add(a2);
+        p1.getArticles().add(a3);
+        p1.getArticles().add(a4);
+
+        publisherService.update(p1);
+        publisherService.update(p3);
+        publisherService.update(p4);
+
+        dijkstra.getArticles().add(a1);
+        aaa.getArticles().add(a2);
+        koch.getArticles().add(a3);
+        einstein.getArticles().add(a4);
+
+        scientistService.update(einstein);
+        scientistService.update(koch);
+        scientistService.update(dijkstra);
+        scientistService.update(aaa);
+
+
+        Citation c1 = Citation.builder()
+                .id(93825L)
+                .pageNumber(1)
+                .source("Smart stuff for CS")
+                .article(a1)
+                .build();
+        Citation c2 = Citation.builder()
+                .id(63425L)
+                .pageNumber(5)
+                .source("Smart stuff for CS")
+                .article(a1)
+                .build();
+        Citation c3 = Citation.builder()
+                .id(9325L)
+                .pageNumber(74)
+                .source("Smart stuff for CS")
+                .article(a1)
+                .build();
+        Citation c4 = Citation.builder()
+                .id(13825L)
+                .pageNumber(41)
+                .source("Big Book")
+                .article(a2)
+                .build();
+        Citation c5 = Citation.builder()
+                .id(6315L)
+                .pageNumber(2)
+                .source("Smol book")
+                .article(a2)
+                .build();
+        Citation c6 = Citation.builder()
+                .id(9125L)
+                .pageNumber(14)
+                .source("Yes He Canned")
+                .article(a2)
+                .build();
+
+        citationService.create(c1);
+        citationService.create(c2);
+        citationService.create(c3);
+        citationService.create(c4);
+        citationService.create(c5);
+        citationService.create(c6);
+
+
+        a1.getCitations().add(c1);
+        a1.getCitations().add(c2);
+        a1.getCitations().add(c3);
+        a2.getCitations().add(c4);
+        a2.getCitations().add(c5);
+        a2.getCitations().add(c6);
+
+        articleService.update(a1);
+        articleService.update(a2);
 
         requestContextController.deactivate();
     }

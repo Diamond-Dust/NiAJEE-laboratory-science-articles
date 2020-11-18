@@ -5,7 +5,6 @@ import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.avatar.repository.AvatarRepository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
-import pl.edu.pg.eti.kask.labsart.servlet.HelloServlet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,12 +56,11 @@ public class AvatarService {
         Optional<Scientist> scientist = scientistRepository.find(login);
 
         if(scientist.isPresent()) {
-            if(scientist.get().getAvatarId() == null) {
+            if(scientist.get().getAvatar() == null) {
                 try {
                     Avatar newAvatar = Avatar.builder().avatar(is.readAllBytes()).build();
-                    UUID id = newAvatar.getId();
                     avatarRepository.create(newAvatar);
-                    scientist.get().setAvatarId(id);
+                    scientist.get().setAvatar(newAvatar);
                     scientistRepository.update(scientist.get());
                     return true;
                 } catch (IOException e) {
@@ -78,7 +76,7 @@ public class AvatarService {
         Optional<Scientist> scientist = scientistRepository.find(login);
 
         if(scientist.isPresent()) {
-            UUID id = scientist.get().getAvatarId();
+            UUID id = scientist.get().getAvatar().getId();
             if(id != null) {
                 Optional<Avatar> avatar = avatarRepository.find(id);
                 if(avatar.isPresent()) {
@@ -101,12 +99,12 @@ public class AvatarService {
         Optional<Scientist> scientist = scientistRepository.find(login);
 
         if(scientist.isPresent()) {
-            UUID id = scientist.get().getAvatarId();
+            UUID id = scientist.get().getAvatar().getId();
             if(id != null) {
                 Optional<Avatar> avatar = avatarRepository.find(id);
                 if(avatar.isPresent()) {
                     avatarRepository.delete(avatar.get());
-                    scientist.get().setAvatarId(null);
+                    scientist.get().setAvatar(null);
                     scientistRepository.update(scientist.get());
                     return true;
                 }

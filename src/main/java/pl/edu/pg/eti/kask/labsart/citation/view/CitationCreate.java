@@ -54,7 +54,6 @@ public class CitationCreate implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        id = citationService.getNewId();
         citation = new CitationCreateModel();
         articles = articleService.findAll();
     }

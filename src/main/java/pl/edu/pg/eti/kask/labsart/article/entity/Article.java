@@ -1,5 +1,7 @@
 package pl.edu.pg.eti.kask.labsart.article.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
@@ -17,28 +19,32 @@ import java.util.function.BiFunction;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
-@EqualsAndHashCode
+@Data
 @Entity
 @Table(name = "articles")
 public class Article implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long          id;
 
     private String        title;
 
     @ManyToOne
     @JoinColumn(name ="publisher")
+    @JsonBackReference
     private Publisher     publisher;
 
     @ManyToOne
     @JoinColumn(name ="scientist")
+    @JsonBackReference
     private Scientist     author;
 
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @Basic(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Citation> citations = new ArrayList<>();
 
     //-----------------------------------------------

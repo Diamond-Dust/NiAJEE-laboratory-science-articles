@@ -1,5 +1,6 @@
 package pl.edu.pg.eti.kask.labsart.publisher.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
@@ -37,6 +38,7 @@ public class Publisher implements Serializable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Article> articles = new ArrayList<>();
 
     //-----------------------------------------------

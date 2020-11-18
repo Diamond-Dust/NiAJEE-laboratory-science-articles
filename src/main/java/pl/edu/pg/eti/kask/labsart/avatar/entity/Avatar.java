@@ -20,7 +20,8 @@ import java.util.UUID;
 public class Avatar implements Serializable {
 
     @Id
-    final private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

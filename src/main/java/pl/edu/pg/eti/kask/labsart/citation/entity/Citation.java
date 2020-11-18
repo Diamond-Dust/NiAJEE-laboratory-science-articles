@@ -1,5 +1,6 @@
 package pl.edu.pg.eti.kask.labsart.citation.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
@@ -19,6 +20,7 @@ import java.util.function.BiFunction;
 @Table(name = "citations")
 public class Citation implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long    id;
 
     private String  source;
@@ -27,6 +29,7 @@ public class Citation implements Serializable {
 
     @ManyToOne
     @JoinColumn(name ="article")
+    @JsonBackReference
     private Article article;
 
     //-----------------------------------------------
