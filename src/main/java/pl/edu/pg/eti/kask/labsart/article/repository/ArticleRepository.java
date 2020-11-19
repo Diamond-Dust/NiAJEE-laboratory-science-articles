@@ -1,18 +1,13 @@
 package pl.edu.pg.eti.kask.labsart.article.repository;
 
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
-import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
-import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @RequestScoped

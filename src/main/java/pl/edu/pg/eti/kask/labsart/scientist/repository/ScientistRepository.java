@@ -1,19 +1,14 @@
 package pl.edu.pg.eti.kask.labsart.scientist.repository;
 
-import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
-import pl.edu.pg.eti.kask.labsart.datastore.DataStore;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequestScoped
 public class ScientistRepository implements Repository<Scientist, String> {
