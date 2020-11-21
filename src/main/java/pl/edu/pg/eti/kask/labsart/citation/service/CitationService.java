@@ -94,13 +94,10 @@ public class CitationService {
     public void deleteCitationForArticle(Long citationId, Long articleId) {
         Optional<Article> article = articleRepository.find(articleId);
         Optional<Citation> cit = citationRepository.find(citationId);
-        if(cit.isPresent()) {
-            if (article.isPresent()) {
-                if(article.get().getCitations().contains(cit.get())) {
-                    article.get().getCitations().remove(cit.get());
-                    articleRepository.update(article.get());
-                }
-            }
+        if(cit.isPresent() && article.isPresent()) {
+            article.get().getCitations().remove(cit.get());
+            articleRepository.update(article.get());
+
             citationRepository.delete(cit.get());
         }
     }
