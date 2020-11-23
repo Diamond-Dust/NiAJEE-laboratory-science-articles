@@ -3,6 +3,7 @@ package pl.edu.pg.eti.kask.labsart.avatar.repository;
 import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-@RequestScoped
+@Dependent
 public class AvatarRepository  implements Repository<Avatar, UUID> {
     private EntityManager em;
 

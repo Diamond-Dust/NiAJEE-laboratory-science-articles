@@ -3,6 +3,7 @@ package pl.edu.pg.eti.kask.labsart.publisher.repository;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@RequestScoped
+@Dependent
 public class PublisherRepository implements Repository<Publisher, Long> {
     private EntityManager em;
 

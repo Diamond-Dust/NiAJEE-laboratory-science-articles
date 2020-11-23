@@ -9,6 +9,8 @@ import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.citation.repository.CitationRepository;
 import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -17,7 +19,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class ArticleService {
 
@@ -41,12 +44,10 @@ public class ArticleService {
 
     public List<Article> findAll() { return articleRepository.findAll(); }
 
-    @Transactional
     public void create(Article article) {
         articleRepository.create(article);
     }
 
-    @Transactional
     public void delete(Long article) {
         Optional<Article> articleObject = articleRepository.find(article);
         if(articleObject.isPresent()) {
@@ -58,8 +59,6 @@ public class ArticleService {
         articleRepository.delete(articleRepository.find(article).orElseThrow());
     }
 
-
-    @Transactional
     public void deleteAll() {
         List<Article> articles = articleRepository.findAll();
         for (Article article : articles){
@@ -67,19 +66,16 @@ public class ArticleService {
         }
     }
 
-    @Transactional
     public void update(Article article) {
         articleRepository.update(article);
     }
 
     //-----------------------------------------------
 
-    @Transactional
     public void createWithoutId(Article article) {
         articleRepository.create(article);
     }
 
-    @Transactional
     public void updateNonNullId(Article article, Long id) {
         find(id).ifPresentOrElse(
                 original -> {articleRepository.update(Article.nonNullUpdateMapper().apply(original, article));},
@@ -87,7 +83,6 @@ public class ArticleService {
         );
     }
 
-    @Transactional
     public void deleteCitation(Long articleId, Long citationId) {
         Optional<Article> article = articleRepository.find(articleId);
         Optional<Citation> citation = citationRepository.find(citationId);

@@ -3,6 +3,18 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!-- FILTERS -->
+
+    <filter>
+        <filter-name>authFilter</filter-name>
+        <filter-class>pl.edu.pg.eti.kask.labsart.scientist.authentication.filter.AuthenticationFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>authFilter</filter-name>
+        <url-pattern>/api/scientists/*</url-pattern>
+    </filter-mapping>
+
     <!-- SERVLETS -->
 
     <servlet>

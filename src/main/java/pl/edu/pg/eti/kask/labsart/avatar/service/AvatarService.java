@@ -6,6 +6,8 @@ import pl.edu.pg.eti.kask.labsart.avatar.repository.AvatarRepository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -14,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class AvatarService {
 

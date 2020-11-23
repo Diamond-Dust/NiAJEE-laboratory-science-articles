@@ -53,16 +53,4 @@ public class ScientistsGetResponse {
             return response.build();
         };
     }
-
-    public String getScientistsString() {
-        String res = "[\n";
-        for(int i=0; i<scientists.size(); i++)
-        {
-            ListScientist s = scientists.get(i);
-            res += (null == s) ? "NULL\n" : ((null == s.login) ?"null":s.login) + " " + ((null == s.website) ? "null" : s.website.toString()) + '\n';
-        }
-        res += ']';
-
-        return res;
-    }
 }

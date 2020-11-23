@@ -7,6 +7,8 @@ import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.citation.model.CitationEditModel;
 import pl.edu.pg.eti.kask.labsart.citation.repository.CitationRepository;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -16,7 +18,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class CitationService {
 
@@ -40,17 +43,14 @@ public class CitationService {
 
     public List<Citation> findAll() { return citationRepository.findAll(); }
 
-    @Transactional
     public void create(Citation citation) {
         citationRepository.create(citation);
     }
 
-    @Transactional
     public void delete(Long citation) {
         citationRepository.delete(citationRepository.find(citation).orElseThrow());
     }
 
-    @Transactional
     public void update(Citation citation) {
         citationRepository.update(citation);
     }
@@ -65,12 +65,10 @@ public class CitationService {
         return Collections.emptyList();
     }
 
-    @Transactional
     public void createWithoutId(Citation citation, Long articleId) {
         createCitation(articleId, citation);
     }
 
-    @Transactional
     public void updateNonNullId(Citation citation, Long id, Long articleId) {
         find(id).ifPresentOrElse(
                 original -> {
@@ -90,7 +88,6 @@ public class CitationService {
         );
     }
 
-    @Transactional
     public void deleteCitationForArticle(Long citationId, Long articleId) {
         Optional<Article> article = articleRepository.find(articleId);
         Optional<Citation> cit = citationRepository.find(citationId);
@@ -102,7 +99,6 @@ public class CitationService {
         }
     }
 
-    @Transactional
     public void deleteAllForArticle(Long articleId) {
         Optional<Article> article = articleRepository.find(articleId);
         if (article.isPresent()) {
@@ -115,7 +111,6 @@ public class CitationService {
         }
     }
 
-    @Transactional
     public void createCitation(Long articleId, Citation citation) {
         Optional<Article> article = articleRepository.find(articleId);
         if(article.isPresent()) {
@@ -125,7 +120,6 @@ public class CitationService {
         }
     }
 
-    @Transactional
     public void updateArticleCitation(Article newArticle, Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());
@@ -146,7 +140,6 @@ public class CitationService {
         }
     }
 
-    @Transactional
     public void updateCitation(Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());

@@ -6,14 +6,13 @@ import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.avatar.entity.Avatar;
 import pl.edu.pg.eti.kask.labsart.commontypes.Education;
-import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.function.BiFunction;
 
 @Getter
 @Setter
@@ -31,7 +30,7 @@ public class Scientist implements Serializable {
     @ToString.Exclude
     private String    password;
 
-    private double    hirschIndex;
+    private Double hirschIndex;
 
     private URL       website;
 
@@ -52,4 +51,16 @@ public class Scientist implements Serializable {
     //-----------------------------------------------
 
     //-----------------------------------------------
+
+    public static BiFunction<Scientist, Scientist, Scientist> nonNullUpdateMapper() {
+        return (toChange, newOne) -> Scientist.builder()
+                .login(newOne.getLogin() != null ? newOne.getLogin() : toChange.getLogin())
+                .password(newOne.getPassword() != null ? newOne.getPassword() : toChange.getPassword())
+                .hirschIndex(newOne.getHirschIndex() != null ? newOne.getHirschIndex() : toChange.getHirschIndex())
+                .website(newOne.getWebsite() != null ? newOne.getWebsite() : toChange.getWebsite())
+                .education(newOne.getEducation() != null ? newOne.getEducation() : toChange.getEducation())
+                .articles(newOne.getArticles() != null ? newOne.getArticles() : toChange.getArticles())
+                .avatar(newOne.getAvatar() != null ? newOne.getAvatar() : toChange.getAvatar())
+                .build();
+    }
 }

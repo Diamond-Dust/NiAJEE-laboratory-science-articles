@@ -13,11 +13,11 @@ public class ScientistContext implements Serializable {
 
     @Getter
     @Setter
-    private String logged;
+    private String principal;
 
     // Anyone can see anything, so we just check whether someone is logged
     public boolean isAuthorized() {
-        return logged != null;
+        return principal != null;
     }
 
 }

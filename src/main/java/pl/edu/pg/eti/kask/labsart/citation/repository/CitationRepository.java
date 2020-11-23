@@ -3,6 +3,7 @@ package pl.edu.pg.eti.kask.labsart.citation.repository;
 import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.repository.Repository;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@RequestScoped
+@Dependent
 public class CitationRepository  implements Repository<Citation, Long> {
     private EntityManager em;
 
