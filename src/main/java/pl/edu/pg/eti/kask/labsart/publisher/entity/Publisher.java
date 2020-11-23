@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
-import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.commontypes.Specialisation;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.function.BiFunction;
 
 @Getter
 @Setter
@@ -30,9 +29,9 @@ public class Publisher implements Serializable {
 
     private Specialisation spec;
 
-    private boolean        predatory;
+    private Boolean        predatory;
 
-    private double         impactFactor;
+    private Double         impactFactor;
 
     @Builder.Default
     @ToString.Exclude
@@ -46,4 +45,15 @@ public class Publisher implements Serializable {
     //-----------------------------------------------
 
     //-----------------------------------------------
+
+    public static BiFunction<Publisher, Publisher, Publisher> nonNullUpdateMapper() {
+        return (toChange, newOne) -> Publisher.builder()
+                .id(newOne.getId() != null ? newOne.getId() : toChange.getId())
+                .name(newOne.getName() != null ? newOne.getName() : toChange.getName())
+                .spec(newOne.getSpec() != null ? newOne.getSpec() : toChange.getSpec())
+                .predatory(newOne.getPredatory() != null ? newOne.getPredatory() : toChange.getPredatory())
+                .impactFactor(newOne.getImpactFactor() != null ? newOne.getImpactFactor() : toChange.getImpactFactor())
+                .articles(newOne.getArticles() != null ? newOne.getArticles() : toChange.getArticles())
+                .build();
+    }
 }

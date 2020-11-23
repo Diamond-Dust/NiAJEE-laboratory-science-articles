@@ -25,9 +25,13 @@ public class ScientistPutRequest {
     }
 
     public static Function<ScientistPutRequest, Scientist> dtoToEntityMapper() {
-        return putArticleRequest -> Scientist.builder()
-                .password(putArticleRequest.getPassword())
-                .build();
+        return scientistPutRequest -> {
+            Scientist scientist = Scientist.builder()
+                    .password(scientistPutRequest.getPassword())
+                    .build();
+            scientist.setArticles(null);
+            return scientist;
+        };
     }
 
     public static BiFunction<Scientist, ScientistPutRequest, Scientist> modelToEntityUpdater() {

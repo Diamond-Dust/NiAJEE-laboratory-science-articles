@@ -13,9 +13,6 @@ import java.util.function.Function;
 @Data
 public class GetArticlesResponse {
 
-    /**
-     * Name of the selected characters.
-     */
     @Singular
     private List<ArticleModel> articleModels;
 

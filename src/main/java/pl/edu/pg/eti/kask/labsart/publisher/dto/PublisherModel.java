@@ -1,13 +1,11 @@
-package pl.edu.pg.eti.kask.labsart.article.dto;
+package pl.edu.pg.eti.kask.labsart.publisher.dto;
+
 
 import lombok.*;
-import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.commontypes.Specialisation;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 
-import java.util.Collection;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Builder
 @NoArgsConstructor

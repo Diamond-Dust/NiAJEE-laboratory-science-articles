@@ -1,6 +1,7 @@
 package pl.edu.pg.eti.kask.labsart.publisher.service;
 
 import lombok.NoArgsConstructor;
+import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.publisher.repository.PublisherRepository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
@@ -43,8 +44,9 @@ public class PublisherService {
         repository.create(publisher);
     }
 
-    public void delete(Publisher entity) {
-        repository.delete(entity);
+    public void delete(Long article) {
+        Optional<Publisher> articleObject = repository.find(article);
+        repository.delete(repository.find(article).orElseThrow());
     }
 
     public void update(Publisher entity) {
@@ -52,5 +54,16 @@ public class PublisherService {
     }
 
     //-----------------------------------------------
+
+    public void createWithoutId(Publisher publisher) {
+        repository.create(publisher);
+    }
+
+    public void updateNonNullId(Publisher publisher, Long id) {
+        find(id).ifPresentOrElse(
+                original -> {repository.update(Publisher.nonNullUpdateMapper().apply(original, publisher));},
+                () -> { throw new NullPointerException();}
+        );
+    }
 
 }
