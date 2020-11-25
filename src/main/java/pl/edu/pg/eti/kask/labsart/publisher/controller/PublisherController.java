@@ -6,7 +6,9 @@ import pl.edu.pg.eti.kask.labsart.publisher.dto.PostPublisherRequest;
 import pl.edu.pg.eti.kask.labsart.publisher.dto.PutPublisherRequest;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.publisher.service.PublisherService;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Path("/publisher")
+@RolesAllowed(UserRoles.USER)
 public class PublisherController {
 
     private PublisherService service;
@@ -59,6 +62,7 @@ public class PublisherController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RolesAllowed(UserRoles.ADMIN)
     public Response deletePublisher(@PathParam("id") Long id) {
         Response.ResponseBuilder response;
 
@@ -78,6 +82,7 @@ public class PublisherController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RolesAllowed(UserRoles.ADMIN)
     public Response updatePublisher(@PathParam("id") Long id, PutPublisherRequest request) {
         Response.ResponseBuilder response;
 
@@ -96,6 +101,7 @@ public class PublisherController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(UserRoles.ADMIN)
     public Response uploadPublisher(PostPublisherRequest request) {
         Response.ResponseBuilder response;
 

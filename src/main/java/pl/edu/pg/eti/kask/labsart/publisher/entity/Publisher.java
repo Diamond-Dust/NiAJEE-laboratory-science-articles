@@ -23,6 +23,7 @@ import java.util.function.BiFunction;
 @Table(name = "publishers")
 public class Publisher implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long           id;
 
     private String         name;

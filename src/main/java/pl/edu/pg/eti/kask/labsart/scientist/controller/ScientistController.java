@@ -5,8 +5,11 @@ import pl.edu.pg.eti.kask.labsart.scientist.dto.ScientistPostRequest;
 import pl.edu.pg.eti.kask.labsart.scientist.dto.ScientistPutRequest;
 import pl.edu.pg.eti.kask.labsart.scientist.dto.ScientistsGetResponse;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
 import pl.edu.pg.eti.kask.labsart.scientist.service.ScientistService;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @Path("")
+@RolesAllowed(UserRoles.USER)
 public class ScientistController {
 
     private ScientistService service;
@@ -56,6 +60,7 @@ public class ScientistController {
     @Path("/scientist")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @PermitAll
     public Response postUser(ScientistPostRequest request) {
         Response.ResponseBuilder response;
 
@@ -102,6 +107,7 @@ public class ScientistController {
 
     @Path("/scientist/{login}")
     @DELETE
+    @RolesAllowed(UserRoles.ADMIN)
     public Response deleteUser(@PathParam("login") String login) {
         Optional<Scientist> user = service.find(login);
         if (user.isPresent()) {

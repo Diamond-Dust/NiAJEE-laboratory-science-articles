@@ -9,74 +9,93 @@ import pl.edu.pg.eti.kask.labsart.commontypes.Specialisation;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.publisher.service.PublisherService;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
 import pl.edu.pg.eti.kask.labsart.scientist.service.ScientistService;
 import pl.edu.pg.eti.kask.labsart.util.Util;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
+import java.util.List;
 
-@ApplicationScoped
+@Singleton
+@Startup
 public class InitializedData {
 
-    private final ScientistService scientistService;
-    private final ArticleService   articleService;
-    private final PublisherService publisherService;
-    private final CitationService  citationService;
+    private EntityManager em;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
 
     private RequestContextController requestContextController;
 
+    private Pbkdf2PasswordHash pbkdf;
+
+    public InitializedData() {
+    }
+
     @Inject
-    public InitializedData (ScientistService scientistService, ArticleService articleService, PublisherService publisherService, CitationService citationService, RequestContextController requestContextController) {
-        this.scientistService = scientistService;
-        this.articleService   = articleService;
-        this.publisherService = publisherService;
-        this.citationService = citationService;
+    public InitializedData (
+            RequestContextController requestContextController,
+            Pbkdf2PasswordHash pbkdf
+    ) {
         this.requestContextController = requestContextController;
+        this.pbkdf = pbkdf;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
-    }
-
+    @PostConstruct
     private synchronized void init() {
         requestContextController.activate();
 
 
         Scientist einstein = Scientist.builder()
                 .login("einstein33")
-                .password(Util.hash("secretbomb"))
+                .password(pbkdf.generate("secretbomb".toCharArray()))
                 .hirschIndex(30.0)
                 .website(Util.createUrl("http://einstein.com"))
                 .education(Education.HABILITATION)
+                .roles(List.of(UserRoles.USER))
                 .build();
         Scientist koch = Scientist.builder()
                 .login("koch")
-                .password(Util.hash("bacter"))
+                .password(pbkdf.generate("bacter".toCharArray()))
                 .hirschIndex(10.0)
                 .website(Util.createUrl("http://kochamkocha.de.pl"))
                 .education(Education.DOCTORATE)
+                .roles(List.of(UserRoles.USER))
                 .build();
         Scientist dijkstra = Scientist.builder()
                 .login("dijkstra")
-                .password(Util.hash("zoom"))
+                .password(pbkdf.generate("zoom".toCharArray()))
                 .hirschIndex(15.0)
                 .website(Util.createUrl("http://consideredharmful.com"))
                 .education(Education.MASTER)
+                .roles(List.of(UserRoles.USER))
                 .build();
         Scientist aaa = Scientist.builder()
                 .login("aaa")
-                .password(Util.hash("bbb"))
+                .password(pbkdf.generate("bbb".toCharArray()))
                 .hirschIndex(0.0)
                 .education(Education.NONE)
+                .roles(List.of(UserRoles.ADMIN, UserRoles.USER))
                 .build();
 
-        scientistService.create(einstein);
-        scientistService.create(koch);
-        scientistService.create(dijkstra);
-        scientistService.create(aaa);
+
+        em.persist(einstein);
+        em.persist(koch);
+        em.persist(dijkstra);
+        em.persist(aaa);
 
         Publisher p1 = Publisher.builder()
                 .id(123L)
@@ -107,10 +126,10 @@ public class InitializedData {
                 .spec(Specialisation.BIOLOGY)
                 .build();
 
-        publisherService.create(p1);
-        publisherService.create(p2);
-        publisherService.create(p3);
-        publisherService.create(p4);
+        em.persist(p1);
+        em.persist(p2);
+        em.persist(p3);
+        em.persist(p4);
 
 
         Article a1 = Article.builder()
@@ -139,29 +158,29 @@ public class InitializedData {
                 .build();
 
 
-        articleService.create(a1);
-        articleService.create(a2);
-        articleService.create(a3);
-        articleService.create(a4);
+        em.persist(a1);
+        em.persist(a2);
+        em.persist(a3);
+        em.persist(a4);
 
         p3.getArticles().add(a1);
         p4.getArticles().add(a2);
         p1.getArticles().add(a3);
         p1.getArticles().add(a4);
 
-        publisherService.update(p1);
-        publisherService.update(p3);
-        publisherService.update(p4);
+        em.merge(p1);
+        em.merge(p3);
+        em.merge(p4);
 
         dijkstra.getArticles().add(a1);
         aaa.getArticles().add(a2);
         koch.getArticles().add(a3);
         einstein.getArticles().add(a4);
 
-        scientistService.update(einstein);
-        scientistService.update(koch);
-        scientistService.update(dijkstra);
-        scientistService.update(aaa);
+        em.merge(einstein);
+        em.merge(koch);
+        em.merge(dijkstra);
+        em.merge(aaa);
 
 
         Citation c1 = Citation.builder()
@@ -201,12 +220,12 @@ public class InitializedData {
                 .article(a2)
                 .build();
 
-        citationService.create(c1);
-        citationService.create(c2);
-        citationService.create(c3);
-        citationService.create(c4);
-        citationService.create(c5);
-        citationService.create(c6);
+        em.persist(c1);
+        em.persist(c2);
+        em.persist(c3);
+        em.persist(c4);
+        em.persist(c5);
+        em.persist(c6);
 
 
         a1.getCitations().add(c1);
@@ -216,8 +235,8 @@ public class InitializedData {
         a2.getCitations().add(c5);
         a2.getCitations().add(c6);
 
-        articleService.update(a1);
-        articleService.update(a2);
+        em.merge(a1);
+        em.merge(a2);
 
         requestContextController.deactivate();
     }

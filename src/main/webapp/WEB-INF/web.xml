@@ -5,16 +5,6 @@
 
     <!-- FILTERS -->
 
-    <filter>
-        <filter-name>authFilter</filter-name>
-        <filter-class>pl.edu.pg.eti.kask.labsart.scientist.authentication.filter.AuthenticationFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>authFilter</filter-name>
-        <url-pattern>/api/scientists/*</url-pattern>
-    </filter-mapping>
-
     <!-- SERVLETS -->
 
     <servlet>
@@ -79,6 +69,16 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+
+    <!-- SECURITY -->
+
+    <security-role>
+        <role-name>admin</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
 
 
 </web-app>

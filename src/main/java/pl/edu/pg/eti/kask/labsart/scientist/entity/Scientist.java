@@ -46,6 +46,12 @@ public class Scientist implements Serializable {
     @OneToOne
     private Avatar avatar;
 
+    @CollectionTable(name = "users_roles", joinColumns = @JoinColumn(name = "scientist"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
+
     //-----------------------------------------------
 
     //-----------------------------------------------

@@ -5,8 +5,10 @@ import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.publisher.repository.PublisherRepository;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
 import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @Stateless
 @LocalBean
 @NoArgsConstructor
+@RolesAllowed(UserRoles.USER)
 public class PublisherService {
 
     private PublisherRepository repository;
@@ -40,15 +43,18 @@ public class PublisherService {
 
     public List<Publisher> findAll() { return repository.findAll(); }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public void create(Publisher publisher) {
         repository.create(publisher);
     }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public void delete(Long article) {
         Optional<Publisher> articleObject = repository.find(article);
         repository.delete(repository.find(article).orElseThrow());
     }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public void update(Publisher entity) {
         repository.update(entity);
     }

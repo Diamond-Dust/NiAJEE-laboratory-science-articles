@@ -1,38 +1,39 @@
 package pl.edu.pg.eti.kask.labsart.scientist.service;
 
 import lombok.NoArgsConstructor;
-import pl.edu.pg.eti.kask.labsart.article.entity.Article;
-import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
-import pl.edu.pg.eti.kask.labsart.scientist.context.ScientistContext;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
 import pl.edu.pg.eti.kask.labsart.scientist.repository.ScientistRepository;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.security.enterprise.SecurityContext;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Stateless
 @LocalBean
 @NoArgsConstructor
+@RolesAllowed(UserRoles.USER)
 public class ScientistService {
 
     private ScientistRepository repository;
 
-    private ScientistContext context;
+    private SecurityContext securityContext;
+
+    private Pbkdf2PasswordHash pbkdf;
 
     //-----------------------------------------------
 
     @Inject
-    public ScientistService(ScientistRepository repository, ScientistContext context) {
+    public ScientistService(ScientistRepository repository, SecurityContext context, Pbkdf2PasswordHash pbkdf) {
         this.repository = repository;
-        this.context = context;
+        this.securityContext = context;
+        this.pbkdf = pbkdf;
     }
 
     //-----------------------------------------------
@@ -45,14 +46,21 @@ public class ScientistService {
 
     public List<Scientist> findAll() { return repository.findAll(); }
 
+    @PermitAll
     public void create(Scientist user) {
+        if (!securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            user.setRoles(List.of(UserRoles.USER));
+        }
+        user.setPassword(pbkdf.generate(user.getPassword().toCharArray()));
         repository.create(user);
     }
+
 
     public void update(Scientist entity) {
         repository.update(entity);
     }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public void delete(Scientist user) {
         repository.delete(user);
     }
@@ -63,10 +71,19 @@ public class ScientistService {
         return repository.findAuth(login, password);
     }
 
+    public boolean isCaller(String role) {
+        if (securityContext.getCallerPrincipal() != null) {
+            Optional<Scientist> found = find(securityContext.getCallerPrincipal().getName());
+            if (found.isPresent()) {
+                return found.get().getRoles().contains(role);
+            }
+        }
+        return false;
+    }
 
     public Optional<Scientist> findCallerPrincipal() {
-        if (context.getPrincipal() != null) {
-            return find(context.getPrincipal());
+        if (securityContext.getCallerPrincipal() != null) {
+            return find(securityContext.getCallerPrincipal().getName());
         } else {
             return Optional.empty();
         }

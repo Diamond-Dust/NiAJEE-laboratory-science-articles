@@ -1,6 +1,5 @@
 package pl.edu.pg.eti.kask.labsart.scientist.servlet;
 
-import pl.edu.pg.eti.kask.labsart.scientist.context.ScientistContext;
 import pl.edu.pg.eti.kask.labsart.scientist.dto.ScientistGetResponse;
 import pl.edu.pg.eti.kask.labsart.scientist.dto.ScientistsGetResponse;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
@@ -17,20 +16,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ScientistServlet extends HttpServlet {
 
     private ScientistService scientistService;
-    private ScientistContext scientistContext;
 
     @Inject
-    public ScientistServlet(ScientistService scientistService, ScientistContext scientistContext) {
+    public ScientistServlet(ScientistService scientistService) {
         this.scientistService = scientistService;
-        this.scientistContext = scientistContext;
     }
 
     public static class Patterns {
@@ -43,7 +38,6 @@ public class ScientistServlet extends HttpServlet {
     private final Pattern     pattern     = Pattern.compile(Patterns.SCIENTIST);
 
     private void getScientist(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //String login = scientistContext.getLogged();
         String login = Util.getFirstGroupFromPath(
                 Util.parseRequestPath(request),
                 pattern
@@ -62,7 +56,6 @@ public class ScientistServlet extends HttpServlet {
                         );
             }
             catch(JsonbException e) {
-                //response.getWriter().write("\n\n\n" + e.getMessage() + "\n\n\n" + e.getCause());
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -81,7 +74,6 @@ public class ScientistServlet extends HttpServlet {
                     );
         }
         catch(JsonbException e) {
-            //response.getWriter().write("\n\n\n" + e.getMessage() + "\n\n\n" + e.getCause());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,23 +81,16 @@ public class ScientistServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //String logged = scientistContext.getLogged();
         String path = Util.parseRequestPath(request);
         response.setContentType("application/json");
 
-        //if(logged != null) {
-            if (path.matches(Patterns.SCIENTIST)) {
-                getScientist(request, response);
-                //return;
-            } else if (path.matches(Patterns.SCIENTISTS)) {
-                getScientists(request, response);
-                //return;
-            } else {
-                response.getWriter().write("{}");
-            }
-        //}
-
-        //response.getWriter().write("{}");
+        if (path.matches(Patterns.SCIENTIST)) {
+           getScientist(request, response);
+        } else if (path.matches(Patterns.SCIENTISTS)) {
+           getScientists(request, response);
+        } else {
+           response.getWriter().write("{}");
+        }
     }
 
 }
