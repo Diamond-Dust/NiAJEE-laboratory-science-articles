@@ -146,6 +146,41 @@ public class ArticleService {
         );
     }
 
+    public void deleteCitationForCaller(Long articleId, Long citationId) throws NullPointerException {
+        Optional<Article> article;
+        Optional<Citation> citation;
+
+        if(securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            article = articleRepository.find(articleId);
+            citation = citationRepository.find(citationId);
+        } else {
+            article = articleRepository.findForScientist(
+                    articleId,
+                    scientistRepository.find(securityContext.getCallerPrincipal().getName())
+                            .orElseThrow()
+            );
+            citation = citationRepository.findForArticle(
+                    citationId,
+                    articleId
+            );
+        }
+
+        article.ifPresentOrElse(
+                articleObject -> {
+                    citation.ifPresentOrElse(
+                            citationObject -> {
+                                articleObject.getCitations().remove(citationObject);
+                                articleRepository.update(articleObject);
+                                delete(citationObject.getId());
+                            },
+                            () -> { throw new NullPointerException();}
+                    );
+                },
+                () -> { throw new NullPointerException();}
+        );
+
+    }
+
     //-----------------------------------------------
 
     public void createWithoutId(Article article) {

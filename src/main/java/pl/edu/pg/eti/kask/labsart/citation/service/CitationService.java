@@ -4,19 +4,16 @@ import lombok.NoArgsConstructor;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.article.repository.ArticleRepository;
 import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
-import pl.edu.pg.eti.kask.labsart.citation.model.CitationEditModel;
+import pl.edu.pg.eti.kask.labsart.citation.logger.LoggedCitation.LoggedCitation;
+import pl.edu.pg.eti.kask.labsart.citation.logger.LoggedId.LoggedId;
 import pl.edu.pg.eti.kask.labsart.citation.repository.CitationRepository;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -47,6 +44,7 @@ public class CitationService {
         citationRepository.create(citation);
     }
 
+    @LoggedId(0)
     public void delete(Long citation) {
         citationRepository.delete(citationRepository.find(citation).orElseThrow());
     }
@@ -111,6 +109,7 @@ public class CitationService {
         }
     }
 
+    @LoggedCitation(1)
     public void createCitation(Long articleId, Citation citation) {
         Optional<Article> article = articleRepository.find(articleId);
         if(article.isPresent()) {
@@ -120,6 +119,7 @@ public class CitationService {
         }
     }
 
+    @LoggedCitation(1)
     public void updateArticleCitation(Article newArticle, Citation citation) {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());

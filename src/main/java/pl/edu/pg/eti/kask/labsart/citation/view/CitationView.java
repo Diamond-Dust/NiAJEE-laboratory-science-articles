@@ -25,7 +25,7 @@ public class CitationView implements Serializable {
     /**
      * Service for managing articles.
      */
-    private final CitationService citationService;
+    private CitationService citationService;
 
     /**
      * Article id.
@@ -40,10 +40,11 @@ public class CitationView implements Serializable {
     @Getter
     private CitationModel citation;
 
-    @Inject
-    public CitationView(CitationService citationService) {
-        this.citationService = citationService;
+    public CitationView() {}
 
+    @Inject
+    public void setService(CitationService citationService) {
+        this.citationService = citationService;
     }
 
     /**

@@ -14,13 +14,13 @@
         <!-- <h:outputStylesheet library="article" name="css/article_view.css"/> -->
         <h:panelGroup rendered="true" layout="block">
             <article class="text--justified">
-                <header><h2>Inner ID: <h:outputText value="#{citationView.citation.id}"/></h2></header>
+                <header><h2>#{messages['cit.id']}: <h:outputText value="#{citationView.citation.id}"/></h2></header>
                 <div class="article__grid">
                     <div class="article__page_number">
-                        Page number: <h:outputText value="#{citationView.citation.pageNumber}"/>
+                        #{messages['cit.pageNumber']}: <h:outputText value="#{citationView.citation.pageNumber}"/>
                     </div>
                     <div class="article__source">
-                        Source: <h:outputText value="#{citationView.citation.source}"/>
+                        #{messages['cit.source']}: <h:outputText value="#{citationView.citation.source}"/>
                     </div>
                 </div>
             </article>

@@ -4,5 +4,8 @@
        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                            http://xmlns.jcp.org/xml/ns/javaee/beans_2_0.xsd"
        version="2.0" bean-discovery-mode="all">
-
+    <!--<interceptors>
+        <class>src.main.java.pl.edu.pg.eti.kask.labsart.citation.logger.LoggedId.CitationIdLoggerInterceptor</class>
+        <class>src.main.java.pl.edu.pg.eti.kask.labsart.citation.logger.LoggedCitation.CitationObjectLoggerInterceptor</class>
+    </interceptors>-->
 </beans>

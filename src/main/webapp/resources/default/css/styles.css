@@ -18,6 +18,9 @@ body, html {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.header-text h1 {
   color: white;
 }
 
@@ -65,4 +68,8 @@ body, html {
   background-color: #AAAAFF;
   color: white;
   text-align: center;
+}
+
+#log_info {
+  color: white;
 }

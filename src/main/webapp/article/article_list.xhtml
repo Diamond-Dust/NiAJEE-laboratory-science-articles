@@ -6,17 +6,17 @@
                 template="/WEB-INF/template/template.xhtml">
 
     <ui:define name="content">
-        <h:panelGroup rendered="true" layout="block">
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
             <article class="text--justified">
                 <header><h2>Articles</h2></header>
                 <h:dataTable value="#{articleList.articles.articles}" var="article" styleClass="data-table">
                     <h:column>
-                        <f:facet name="header">title</f:facet>
+                        <f:facet name="header">#{messages['act.title']}</f:facet>
                         <h:outputText value="#{article.title}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">view</f:facet>
-                        <h:link outcome="/article/article_view.xhtml" value="view">
+                        <f:facet name="header">#{messages['act.view']}</f:facet>
+                        <h:link outcome="/article/article_view.xhtml" value="#{messages['act.view']}">
                             <f:param name="id" value="#{article.id}"/>
                         </h:link>
                     </h:column>
@@ -26,10 +26,10 @@
                             <f:param name="id" value="#{character.id}"/>
                         </h:link>
                     </h:column>-->
-                    <h:column>
-                        <f:facet name="header">delete</f:facet>
+                    <h:column rendered="#{articleList.canPrincipalDelete()}">
+                        <f:facet name="header">#{messages['act.delete']}</f:facet>
                         <h:form>
-                            <h:commandButton styleClass="ui-button ui-control" value="delete"
+                            <h:commandButton styleClass="ui-button ui-control" value="#{messages['act.delete']}"
                                              action="#{articleList.deleteAction(article)}"/>
                         </h:form>
                     </h:column>

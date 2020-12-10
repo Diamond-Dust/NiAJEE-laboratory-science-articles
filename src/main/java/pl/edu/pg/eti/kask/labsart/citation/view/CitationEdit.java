@@ -25,8 +25,8 @@ public class CitationEdit implements Serializable {
     /**
      * Citation for managing articles.
      */
-    private final CitationService citationService;
-    private final ArticleService articleService;
+    private CitationService citationService;
+    private ArticleService articleService;
 
     /**
      * Citation id.
@@ -47,8 +47,10 @@ public class CitationEdit implements Serializable {
     @Getter
     private CitationEditModel citation;
 
+    public CitationEdit() {}
+
     @Inject
-    public CitationEdit(CitationService citationService, ArticleService articleService) {
+    public void setService(CitationService citationService, ArticleService articleService) {
         this.citationService = citationService;
         this.articleService = articleService;
     }
@@ -74,7 +76,8 @@ public class CitationEdit implements Serializable {
      * @return navigation case to the same page
      */
     public String saveAction() {
-        citationService.updateArticleCitation(article, CitationEditModel.modelToEntityUpdater().apply(citationService.find(id).orElseThrow(), citation));
+        Citation cit = CitationEditModel.modelToEntityUpdater().apply(citationService.find(id).orElseThrow(), citation);
+        citationService.updateArticleCitation(article, cit);
         String viewId = "/citation/citation_view"; //FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }

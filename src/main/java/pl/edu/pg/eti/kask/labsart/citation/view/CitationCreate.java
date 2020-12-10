@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.article.service.ArticleService;
+import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.citation.model.CitationCreateModel;
+import pl.edu.pg.eti.kask.labsart.citation.model.CitationEditModel;
 import pl.edu.pg.eti.kask.labsart.citation.service.CitationService;
 
 import javax.faces.view.ViewScoped;
@@ -21,8 +23,8 @@ public class CitationCreate implements Serializable {
     /**
      * Citation for managing articles.
      */
-    private final CitationService citationService;
-    private final ArticleService  articleService;
+    private CitationService citationService;
+    private ArticleService  articleService;
 
     /**
      * Citation id.
@@ -43,8 +45,10 @@ public class CitationCreate implements Serializable {
     @Getter
     private CitationCreateModel citation;
 
+    public CitationCreate() {}
+
     @Inject
-    public CitationCreate(CitationService citationService, ArticleService articleService) {
+    public void setService(CitationService citationService, ArticleService articleService) {
         this.citationService = citationService;
         this.articleService = articleService;
     }
@@ -64,7 +68,8 @@ public class CitationCreate implements Serializable {
      * @return navigation case to the same page
      */
     public String saveAction() {
-        citationService.createCitation(article.getId(), CitationCreateModel.modelToEntityUpdater().apply(id, citation));
+        Citation cit = CitationCreateModel.modelToEntityUpdater().apply(id, citation);
+        citationService.createCitation(article.getId(), cit);
         String viewId = "/citation/citation_view?id=" + id; //FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "&faces-redirect=true&includeViewParams=true";
     }

@@ -18,10 +18,10 @@
                 <h2><h:messages/></h2>
                 <div class="article__grid">
                     <div class="article__author">
-                        Author: <h:outputText value="#{articleView.article.author.login}"/>
+                        #{messages['act.author']}: <h:outputText value="#{articleView.article.author.login}"/>
                     </div>
                     <div class="article__publisher">
-                        Publisher: <h:outputText value="#{articleView.article.publisher.name}"/>
+                        #{messages['act.publisher']} <h:outputText value="#{articleView.article.publisher.name}"/>
                     </div>
                     <div class="article__citation__add">
                         <h:link outcome="/citation/citation_create.xhtml" value="create a citation">
@@ -31,24 +31,24 @@
                     <h:form>
                     <h:dataTable value="#{articleView.article.citations}" var="citation">
                             <h:column>
-                                <f:facet name="header">page number</f:facet>
+                                <f:facet name="header">#{messages['act.pageNumber']}</f:facet>
                                 <h:outputText value="#{citation.pageNumber}"/>
                             </h:column>
                             <h:column>
-                                <f:facet name="header">view</f:facet>
-                                <h:link outcome="/citation/citation_view.xhtml" value="view">
+                                <f:facet name="header">#{messages['act.view']}</f:facet>
+                                <h:link outcome="/citation/citation_view.xhtml" value="#{messages['act.view']}">
                                     <f:param name="id" value="#{citation.id}"/>
                                 </h:link>
                             </h:column>
                             <h:column>
-                                    <f:facet name="header">edit</f:facet>
-                                    <h:link outcome="/citation/citation_edit.xhtml" value="edit">
+                                    <f:facet name="header">#{messages['act.edit']}</f:facet>
+                                    <h:link outcome="/citation/citation_edit.xhtml" value="#{messages['act.edit']}">
                                         <f:param name="id" value="#{citation.id}"/>
                                     </h:link>
                             </h:column>
                             <h:column>
-                                    <f:facet name="header">delete</f:facet>
-                                        <h:commandButton styleClass="ui-button ui-control" value="delete"
+                                    <f:facet name="header">#{messages['act.delete']}</f:facet>
+                                        <h:commandButton styleClass="ui-button ui-control" value="#{messages['act.delete']}"
                                                          action="#{articleView.deleteAction(citation)}"/>
                             </h:column>
                     </h:dataTable>

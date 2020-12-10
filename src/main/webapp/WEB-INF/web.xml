@@ -70,7 +70,24 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errors/404.xhtml</location>
+    </error-page>
+
+
     <!-- SECURITY -->
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>article</web-resource-name>
+            <url-pattern>/article/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
 
     <security-role>
         <role-name>admin</role-name>

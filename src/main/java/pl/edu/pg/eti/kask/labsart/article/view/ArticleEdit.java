@@ -5,7 +5,10 @@ import lombok.Setter;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.article.model.ArticleEditModel;
 import pl.edu.pg.eti.kask.labsart.article.service.ArticleService;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
+import pl.edu.pg.eti.kask.labsart.scientist.service.ScientistService;
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -22,7 +25,8 @@ public class ArticleEdit implements Serializable {
     /**
      * Service for managing articles.
      */
-    private final ArticleService service;
+    private ArticleService service;
+    private ScientistService scientistService;
 
     /**
      * Article id.
@@ -37,9 +41,12 @@ public class ArticleEdit implements Serializable {
     @Getter
     private ArticleEditModel article;
 
+    public ArticleEdit() {}
+
     @Inject
-    public ArticleEdit(ArticleService service) {
+    public void setService(ArticleService service, ScientistService scientistService) {
         this.service = service;
+        this.scientistService = scientistService;
     }
 
     /**
@@ -47,7 +54,12 @@ public class ArticleEdit implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        Optional<Article> article = service.find(id);
+        Optional<Article> article;
+        if(scientistService.isCaller(UserRoles.ADMIN)) {
+            article = service.find(id);
+        } else {
+            article = service.findForCaller(id);
+        }
         if (article.isPresent()) {
             this.article = ArticleEditModel.entityToModelMapper().apply(article.get());
         } else {

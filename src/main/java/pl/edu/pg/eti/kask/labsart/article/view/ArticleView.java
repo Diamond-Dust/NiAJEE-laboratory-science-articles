@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pg.eti.kask.labsart.article.entity.Article;
 import pl.edu.pg.eti.kask.labsart.article.model.ArticleModel;
+import pl.edu.pg.eti.kask.labsart.article.model.ArticlesModel;
 import pl.edu.pg.eti.kask.labsart.article.service.ArticleService;
 import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.citation.service.CitationService;
+import pl.edu.pg.eti.kask.labsart.scientist.entity.UserRoles;
+import pl.edu.pg.eti.kask.labsart.scientist.service.ScientistService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -16,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 @ViewScoped
@@ -25,7 +30,8 @@ public class ArticleView implements Serializable {
     /**
      * Service for managing articles.
      */
-    private final ArticleService articleService;
+    private ArticleService articleService;
+    private ScientistService scientistService;
 
     /**
      * Article id.
@@ -40,9 +46,12 @@ public class ArticleView implements Serializable {
     @Getter
     private ArticleModel article;
 
+    public ArticleView() {}
+
     @Inject
-    public ArticleView(ArticleService articleService) {
+    public void setService(ArticleService articleService, ScientistService scientistService) {
         this.articleService = articleService;
+        this.scientistService = scientistService;
     }
 
     /**
@@ -50,7 +59,12 @@ public class ArticleView implements Serializable {
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        Optional<Article> article = articleService.find(id);
+        Optional<Article> article;
+        if(scientistService.isCaller(UserRoles.ADMIN)) {
+            article = articleService.find(id);
+        } else {
+            article = articleService.findForCaller(id);
+        }
         if (article.isPresent()) {
             this.article = ArticleModel.entityToModelMapper().apply(article.get());
         } else {
@@ -61,7 +75,7 @@ public class ArticleView implements Serializable {
 
 
     public String deleteAction(Citation citation) {
-        articleService.deleteCitation(id, citation.getId());
+        articleService.deleteCitationForCaller(id, citation.getId());
         return "article_view?faces-redirect=true&includeViewParams=true";
     }
     public String strRet(Citation citation) {
