@@ -8,10 +8,13 @@ import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.citation.model.CitationEditModel;
 import pl.edu.pg.eti.kask.labsart.citation.service.CitationService;
 
+import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.OptimisticLockException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,15 +58,18 @@ public class CitationEdit implements Serializable {
         this.articleService = articleService;
     }
 
+    private boolean updateModel() {
+        Optional<Citation> citation = citationService.find(id);
+        citation.ifPresent(value -> this.citation = CitationEditModel.entityToModelMapper().apply(value));
+        return citation.isPresent();
+    }
+
     /**
      * In order to prevent calling service on different steps of JSF request lifecycle, model property is cached within
      * field and initialized during init of the view.
      */
     public void init() throws IOException {
-        Optional<Citation> citation = citationService.find(id);
-        if (citation.isPresent()) {
-            this.citation = CitationEditModel.entityToModelMapper().apply(citation.get());
-        } else {
+        if (!updateModel()) {
             FacesContext.getCurrentInstance().getExternalContext()
                     .responseSendError(HttpServletResponse.SC_NOT_FOUND, "Citation not found");
         }
@@ -75,11 +81,24 @@ public class CitationEdit implements Serializable {
      *
      * @return navigation case to the same page
      */
-    public String saveAction() {
-        Citation cit = CitationEditModel.modelToEntityUpdater().apply(citationService.find(id).orElseThrow(), citation);
-        citationService.updateArticleCitation(article, cit);
-        String viewId = "/citation/citation_view"; //FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+    public String saveAction() throws IOException {
+        try {
+            Citation cit = CitationEditModel.modelToEntityUpdater().apply(citationService.find(id).orElseThrow(), citation);
+            citationService.updateArticleCitation(article, cit);
+            updateModel();
+            cit = CitationEditModel.modelToEntityUpdater().apply(citationService.find(id).orElseThrow(), citation);
+            citationService.updateConnection(article, cit);
+            String viewId = "/citation/citation_view";
+            return viewId + "?faces-redirect=true&includeViewParams=true";
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof OptimisticLockException) {
+                init();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Version collision"));
+            }
+            return null;
+        }
+
     }
+
 
 }

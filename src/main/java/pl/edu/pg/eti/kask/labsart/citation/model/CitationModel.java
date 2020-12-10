@@ -6,6 +6,7 @@ import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
@@ -21,6 +22,9 @@ public class CitationModel {
     private Long   id;
     private String source;
     private int    pageNumber;
+    private Long version;
+    private LocalDateTime creation;
+    private LocalDateTime update;
 
 
     /**
@@ -31,6 +35,9 @@ public class CitationModel {
                 .id(citation.getId())
                 .source(citation.getSource())
                 .pageNumber(citation.getPageNumber())
+                .creation(citation.getCreationDateTime())
+                .update(citation.getUpdateDateTime())
+                .version(citation.getVersion())
                 .build();
     }
 }

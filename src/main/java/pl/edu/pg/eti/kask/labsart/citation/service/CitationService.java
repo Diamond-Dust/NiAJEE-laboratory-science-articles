@@ -124,17 +124,28 @@ public class CitationService {
         List<Article> articles = articleRepository.findAll();
         Optional<Citation> cit = citationRepository.find(citation.getId());
         if(cit.isPresent()) {
-            for (Article article : articles) {
-                if(article.getCitations().contains(cit.get())) {
-                    article.getCitations().remove(cit.get());
-                    articleRepository.update(article);
-                }
-            }
-            newArticle.getCitations().remove(cit.get());
-
             citation.setArticle(newArticle);
             citationRepository.update(citation);
 
+            for (Article article : articles) {
+                article.getCitations().removeIf(c -> c.getId().equals(citation.getId()));
+                articleRepository.update(article);
+            }
+            newArticle.getCitations().removeIf(c -> c.getId().equals(citation.getId()));
+            newArticle.getCitations().add(citation);
+            articleRepository.update(newArticle);
+        }
+    }
+
+    public void updateConnection(Article newArticle, Citation citation) {
+        List<Article> articles = articleRepository.findAll();
+        Optional<Citation> cit = citationRepository.find(citation.getId());
+        if(cit.isPresent()) {
+            for (Article article : articles) {
+                article.getCitations().removeIf(c -> c.getId().equals(citation.getId()));
+                articleRepository.update(article);
+            }
+            newArticle.getCitations().removeIf(c -> c.getId().equals(citation.getId()));
             newArticle.getCitations().add(citation);
             articleRepository.update(newArticle);
         }

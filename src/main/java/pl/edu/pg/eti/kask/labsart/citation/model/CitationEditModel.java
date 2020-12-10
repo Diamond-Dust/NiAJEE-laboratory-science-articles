@@ -6,6 +6,8 @@ import pl.edu.pg.eti.kask.labsart.citation.entity.Citation;
 import pl.edu.pg.eti.kask.labsart.publisher.entity.Publisher;
 import pl.edu.pg.eti.kask.labsart.scientist.entity.Scientist;
 
+import javax.persistence.Column;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -21,6 +23,9 @@ public class CitationEditModel {
 
     private String source;
     private int    pageNumber;
+    private Long version;
+    private LocalDateTime creationDateTime;
+    private LocalDateTime updateDateTime;
 
     /**
      * @return mapper for convenient converting entity object to dto object
@@ -29,6 +34,9 @@ public class CitationEditModel {
         return citation -> CitationEditModel.builder()
                 .source(citation.getSource())
                 .pageNumber(citation.getPageNumber())
+                .creationDateTime(citation.getCreationDateTime())
+                .updateDateTime(citation.getUpdateDateTime())
+                .version(citation.getVersion())
                 .build();
     }
 
@@ -39,6 +47,9 @@ public class CitationEditModel {
         return (citation, request) -> {
             citation.setPageNumber(request.getPageNumber());
             citation.setSource(request.getSource());
+            citation.setCreationDateTime(request.getCreationDateTime());
+            citation.setUpdateDateTime(request.getUpdateDateTime());
+            citation.setVersion(request.getVersion());
             return citation;
         };
     }

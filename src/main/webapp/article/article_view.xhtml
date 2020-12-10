@@ -34,6 +34,24 @@
                                 <f:facet name="header">#{messages['act.pageNumber']}</f:facet>
                                 <h:outputText value="#{citation.pageNumber}"/>
                             </h:column>
+
+                            <h:column>
+                                <f:facet name="header">#{messages['cit.version']}</f:facet>
+                                <h:outputText value="#{citation.version}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{messages['cit.creation']}</f:facet>
+                                <h:outputText value="#{citation.creationDateTime}">
+                                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                                </h:outputText>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">#{messages['cit.update']}</f:facet>
+                                <h:outputText value="#{citation.updateDateTime}">
+                                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                                </h:outputText>
+                            </h:column>
+
                             <h:column>
                                 <f:facet name="header">#{messages['act.view']}</f:facet>
                                 <h:link outcome="/citation/citation_view.xhtml" value="#{messages['act.view']}">
